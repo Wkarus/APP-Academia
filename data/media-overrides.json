@@ -1,0 +1,3 @@
+{
+  "_comentario": "Troque a mídia de um exercício aqui, sem mexer no resto. Ex.: \"Dumbbell_Bench_Press\": {\"media\": {\"tipo\": \"mp4\", \"url\": \"media/licenciada/supino.mp4\", \"poster\": \"media/licenciada/supino.jpg\", \"local\": true}, \"fonte\": {\"nome\": \"Biblioteca X\", \"url\": \"https://...\", \"licenca\": \"Licença comercial nº ...\"}}. Rode de novo: python3 scripts/build_exercises.py"
+}
