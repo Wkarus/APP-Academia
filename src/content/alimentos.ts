@@ -101,6 +101,18 @@ export const ALIMENTOS: Alimento[] = [
   a('tomate', 'Tomate', '1 unidade (100 g)', 100, 15, 1.1, 'vegetal'),
   a('abobora', 'Abóbora cabotiá cozida', '100 g', 100, 48, 1.4, 'vegetal'),
   a('couve', 'Couve refogada', '100 g', 100, 90, 1.7, 'vegetal'),
+  // Básicos de receita e temperos
+  a('molho-tomate', 'Molho de tomate caseiro', '1/2 xícara (100 g)', 100, 40, 1.5, 'vegetal'),
+  a('cebola', 'Cebola', '1/2 unidade (50 g)', 50, 20, 0.6, 'vegetal'),
+  a('pimentao', 'Pimentão', '1/2 unidade (60 g)', 60, 15, 0.6, 'vegetal'),
+  a('cogumelo', 'Cogumelo champignon', '100 g', 100, 25, 3, 'vegetal'),
+  a('cenoura', 'Cenoura ralada', '1/2 xícara (50 g)', 50, 17, 0.4, 'vegetal'),
+  a('mel', 'Mel', '1 col. sopa (15 g)', 15, 46, 0, 'lanche'),
+  a('cacau', 'Cacau em pó 100%', '1 col. sopa (6 g)', 6, 20, 1.2, 'lanche'),
+  a('queijo-coalho', 'Queijo coalho', '1 espeto (40 g)', 40, 130, 9, 'laticinio'),
+  a('creme-light', 'Creme de leite light', '2 col. sopa (30 g)', 30, 45, 0.8, 'laticinio'),
+  a('pao-hamburguer', 'Pão de hambúrguer', '1 unidade (60 g)', 60, 160, 5, 'carbo'),
+  a('shoyu', 'Shoyu', '1 col. sopa (15 ml)', 15, 8, 1, 'gordura'),
   // Lanches e prontos
   a('barra-proteina', 'Barra de proteína', '1 unidade (45 g)', 45, 170, 15, 'lanche'),
   a('pipoca', 'Pipoca de panela (pouco óleo)', '1 xícara (10 g)', 10, 45, 1, 'lanche'),

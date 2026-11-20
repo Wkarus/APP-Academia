@@ -8,6 +8,7 @@ App de treino e dieta instalável no celular. É offline-first, não tem backend
 - **Exercícios**: ~880 exercícios com busca e filtros por músculo, equipamento e dificuldade, mais o filtro "Minha academia".
 - **Treinos**: o meu plano de 4 dias, com séries automáticas por semana, e 9 programas prontos com fonte. Dá para criar e editar rotinas.
 - **Dieta**: plano de 2.300 kcal / 165 g de proteína em 6 refeições, banco de alimentos brasileiros, água, 7 guias de dieta e calculadora Mifflin-St Jeor. Por padrão **nada leva peixe ou frutos do mar**.
+- **Receitas e variações**: 33 receitas temperadas. O botão "Trocar" ajusta a porção às calorias da refeição. Tem filtro "Não curto", kit de temperos, link para vídeos no YouTube e o bloco "O que comer agora", que se adapta quando você treina fora do horário.
 - **Progresso**: gráficos de peso, cintura e carga por exercício. As fotos ficam só no aparelho. Exporta e importa backup em JSON.
 - **Modo cuidado**: para calor e fadiga. Traz checklist antes do treino, lembrete de água a cada 15 minutos e os sinais para parar.
 

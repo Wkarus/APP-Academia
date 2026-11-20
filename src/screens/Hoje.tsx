@@ -15,6 +15,7 @@ import { Boasvindas } from '../components/Boasvindas'
 import { ChecklistPreTreino } from '../components/ChecklistPreTreino'
 import { db } from '../lib/db'
 import { hojeISO } from '../lib/datas'
+import { PosTreinoAgora } from '../components/Receitas'
 
 export default function Hoje() {
   const aj = useAjustes()
@@ -152,6 +153,8 @@ export default function Hoje() {
           </div>
         </Card>
       )}
+
+      <div className="mt-4"><PosTreinoAgora soSeRecente /></div>
 
       {/* Dieta e água */}
       <Secao titulo="Alimentação" acao={<Link to="/dieta" className="min-h-10 inline-flex items-center text-sm font-semibold text-amber">Ver dieta</Link>}>
