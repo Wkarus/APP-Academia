@@ -124,9 +124,11 @@ export default function ModoTreino() {
         <BotaoIcone icone="voltar" rotulo="Minimizar treino" onClick={() => nav('/')} />
         <div className="min-w-0 flex-1">
           <p className="truncate font-display text-xl font-bold leading-tight">{ativa.nome}</p>
-          <p className="tnum text-sm text-tx2">
+          <p className="tnum flex items-center gap-1.5 truncate text-sm text-tx2">
             {duracao(agora - ativa.inicio)} · {feitas}/{total} séries
-            {tela.suportado && aj.telaLigada && <span className={cx('ml-2', tela.ligada ? 'text-ok' : 'text-tx2')}>· tela {tela.ligada ? 'ligada' : '…'}</span>}
+            {tela.suportado && aj.telaLigada && tela.ligada && (
+              <span className="text-ok" title="Tela sempre ligada" aria-label="Tela sempre ligada"><Icone nome="sol" size={14} /></span>
+            )}
           </p>
         </div>
         {aj.modoCuidado && <BotaoIcone icone="alerta" rotulo="Sinais para parar" className="text-warn" onClick={() => setSinais(true)} />}
