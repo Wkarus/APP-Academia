@@ -120,4 +120,9 @@ export interface Ajustes {
   objetivo?: Objetivo
   vibrar: boolean
   telaLigada: boolean
+  /** ingredientes que não gosta (filtro das receitas) */
+  naoCurto?: string[]
 }
+
+/** Variação escolhida para uma refeição do plano num dia */
+export interface Escolha { chave: string; data: string; horario: string; receitaId: string; fator: number }

@@ -9,13 +9,18 @@ import { PLANO_DIETA, totaisItens, GUIAS, ATIVIDADES, OBJETIVOS, calcularMacros,
 import { Titulo, Abas, Card, Botao, BotaoIcone, Barra, Interruptor, Aviso, Folha, Chip, Secao, cx } from '../components/ui'
 import { Icone } from '../components/Icone'
 import type { Objetivo } from '../lib/types'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { useSearchParams } from 'react-router-dom'
+import { AbaReceitas, FolhaVariacoes, PosTreinoAgora, FolhaReceita, registrarReceita } from '../components/Receitas'
+import { RECEITAS, macrosReceita, slotDoHorario, receitasPara, fatorPara, SLOT_NOME, type Receita } from '../content/receitas'
 
-type Aba = 'hoje' | 'plano' | 'guias' | 'calc'
+type Aba = 'hoje' | 'plano' | 'receitas' | 'guias' | 'calc'
 const COM_PEIXE = new Set(['pizza-aliche', 'caesar'])
 const r0 = (n: number) => Math.round(n)
 
 export default function Dieta() {
-  const [aba, setAba] = useState<Aba>('hoje')
+  const [params] = useSearchParams()
+  const [aba, setAba] = useState<Aba>((params.get('aba') as Aba) ?? 'hoje')
   const aj = useAjustes()
   return (
     <div>
@@ -23,10 +28,11 @@ export default function Dieta() {
       <div className="mb-4 rounded-2xl bg-s1 px-3">
         <Interruptor ligado={aj.semPeixe} onChange={(v) => salvarAjustes({ semPeixe: v })} rotulo="Sem peixe / frutos do mar" descricao="Todas as sugestões excluem peixes e frutos do mar" />
       </div>
-      <Abas abas={[{ id: 'hoje', nome: 'Hoje' }, { id: 'plano', nome: 'Plano' }, { id: 'guias', nome: 'Guias' }, { id: 'calc', nome: 'Macros' }]} ativa={aba} onChange={setAba} />
+      <Abas abas={[{ id: 'hoje', nome: 'Hoje' }, { id: 'plano', nome: 'Plano' }, { id: 'receitas', nome: 'Receitas' }, { id: 'guias', nome: 'Guias' }, { id: 'calc', nome: 'Macros' }]} ativa={aba} onChange={setAba} />
       <div className="mt-4">
         {aba === 'hoje' && <AbaHoje />}
         {aba === 'plano' && <AbaPlano />}
+        {aba === 'receitas' && <AbaReceitas />}
         {aba === 'guias' && <AbaGuias />}
         {aba === 'calc' && <AbaCalc />}
       </div>
@@ -54,14 +60,24 @@ function AbaHoje() {
   const refeicoes = useRefeicoesDia()
   const agua = useAguaDia()
   const [busca, setBusca] = useState(false)
+  const [trocar, setTrocar] = useState<string | null>(null)
   const kcal = refeicoes.reduce((t, r) => t + r.kcal, 0)
   const prot = refeicoes.reduce((t, r) => t + r.proteina, 0)
+  const escolhas = useLiveQuery(() => db.escolhas.where('data').equals(hojeISO()).toArray(), []) ?? []
+  const escolhaDe = (h: string) => {
+    const e = escolhas.find((x) => x.horario === h)
+    const rec = e ? RECEITAS.find((x) => x.id === e.receitaId) : undefined
+    return e && rec ? { rec, fator: e.fator } : null
+  }
 
   const registrarPlano = async (h: string) => {
     const r = PLANO_DIETA.find((x) => x.horario === h)!
+    const esc = escolhaDe(h)
+    if (esc) return registrarReceita(esc.rec, esc.fator, r.horario, r.nome)
     const t = totaisItens(r.itens)
     await db.refeicoes.add({ data: hojeISO(), horario: r.horario, nome: r.nome, kcal: r0(t.kcal), proteina: r0(t.proteina) })
   }
+  const trocando = PLANO_DIETA.find((x) => x.horario === trocar)
 
   return (
     <div className="space-y-4">
@@ -96,18 +112,23 @@ function AbaHoje() {
         </div>
       </Card>
 
+      <PosTreinoAgora />
+
       <Secao titulo="Refeições do plano">
         <ul className="space-y-2">
           {PLANO_DIETA.map((r) => {
             const feita = refeicoes.find((x) => x.horario === r.horario && x.nome === r.nome)
-            const t = totaisItens(r.itens)
+            const esc = escolhaDe(r.horario)
+            const t = esc ? macrosReceita(esc.rec, esc.fator) : totaisItens(r.itens)
             return (
-              <li key={r.horario} className={cx('flex items-center gap-3 rounded-2xl p-3', feita ? 'bg-ok/10' : 'bg-s1')}>
+              <li key={r.horario} className={cx('flex items-center gap-2 rounded-2xl p-3', feita ? 'bg-ok/10' : 'bg-s1')}>
                 <span className="tnum w-12 shrink-0 font-display text-lg font-bold text-amber">{r.horario}</span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-semibold">{r.nome}</p>
+                  {esc && <p className="truncate text-sm text-amber">{esc.rec.nome}</p>}
                   <p className="tnum text-sm text-tx2">{r0(t.kcal)} kcal · {r0(t.proteina)} g</p>
                 </div>
+                {!feita && <BotaoIcone icone="trocar" rotulo={`Trocar ${r.nome}`} onClick={() => setTrocar(r.horario)} />}
                 {feita ? (
                   <BotaoIcone icone="x" rotulo={`Desfazer ${r.nome}`} onClick={() => db.refeicoes.delete(feita.id!)} />
                 ) : (
@@ -135,6 +156,9 @@ function AbaHoje() {
         )}
       </Secao>
       {busca && <BuscaAlimento onFechar={() => setBusca(false)} />}
+      {trocando && (
+        <FolhaVariacoes slot={slotDoHorario(trocando.horario)} horario={trocando.horario} nomePlano={trocando.nome} kcalAlvo={totaisItens(trocando.itens).kcal} onFechar={() => setTrocar(null)} />
+      )}
     </div>
   )
 }
@@ -203,6 +227,8 @@ function BuscaAlimento({ onFechar }: { onFechar: () => void }) {
 }
 
 function AbaPlano() {
+  const aj = useAjustes()
+  const [ver, setVer] = useState<{ r: Receita; f: number } | null>(null)
   const tot = PLANO_DIETA.reduce((t, r) => { const x = totaisItens(r.itens); return { kcal: t.kcal + x.kcal, proteina: t.proteina + x.proteina } }, { kcal: 0, proteina: 0 })
   return (
     <div className="space-y-3">
@@ -230,10 +256,17 @@ function AbaPlano() {
               })}
             </ul>
             {r.dica && <p className="mt-2 text-sm text-info">{r.dica}</p>}
+            <p className="mt-3 text-xs uppercase tracking-wide text-tx2">Variações ({SLOT_NOME[slotDoHorario(r.horario)]})</p>
+            <div className="no-scrollbar -mx-4 mt-1 flex gap-2 overflow-x-auto px-4">
+              {receitasPara(slotDoHorario(r.horario), aj.naoCurto ?? []).slice(0, 6).map((x) => (
+                <Chip key={x.id} onClick={() => setVer({ r: x, f: fatorPara(x, t.kcal) })}>{x.nome}</Chip>
+              ))}
+            </div>
           </Card>
         )
       })}
-      <p className="text-xs text-tx2">Trocas equivalentes: frango ↔ patinho ↔ lombo; arroz ↔ batata-doce ↔ macarrão ↔ mandioca (ajuste a quantidade pelas calorias).</p>
+      <p className="text-xs text-tx2">Trocas equivalentes: frango ↔ patinho ↔ lombo; arroz ↔ batata-doce ↔ macarrão ↔ mandioca (ajuste a quantidade pelas calorias). As variações já vêm com a porção ajustada às calorias da refeição.</p>
+      {ver && <FolhaReceita r={ver.r} fatorInicial={ver.f} onFechar={() => setVer(null)} />}
     </div>
   )
 }

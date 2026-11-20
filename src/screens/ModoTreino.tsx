@@ -288,7 +288,7 @@ function ExercicioAtual(p: {
           </p>
           <div className="mt-2 flex gap-2">
             <Botao variante="secundario" className="min-h-11 flex-1 px-3 text-sm" icone="livro" onClick={p.onComoFazer}>Como fazer</Botao>
-            <BotaoIcone icone="copiar" rotulo="Trocar exercício" onClick={p.onTrocar} className="h-11 w-11" />
+            <BotaoIcone icone="trocar" rotulo="Trocar exercício" onClick={p.onTrocar} className="h-11 w-11" />
           </div>
         </div>
       </div>
@@ -382,7 +382,8 @@ function Resumo({ sessao, onFechar }: { sessao: Sessao; onFechar: () => void }) 
           {recordes.map((r, i) => <li key={i} className="rounded-xl bg-amber/10 p-2">★ {exPorId(r.exId)?.nome}: {fmt(r.kg)} kg × {r.reps}</li>)}
         </ul>
       )}
-      <Botao grande onClick={onFechar}>Voltar para Hoje</Botao>
+      <Botao grande onClick={() => { onFechar(); setTimeout(() => (location.hash = '#/dieta'), 0) }} icone="prato">O que comer agora</Botao>
+      <Botao grande variante="secundario" onClick={onFechar}>Voltar para Hoje</Botao>
     </div>
   )
 }
