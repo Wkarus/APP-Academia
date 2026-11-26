@@ -16,6 +16,7 @@ export function AvisoFixo() {
   return (
     <p className="px-1 pt-6 text-center text-xs leading-snug text-tx2">
       App informativo. Não substitui médico, nutricionista ou educador físico.
+      <span className="mt-1 block opacity-70">FORJA v{__APP_VERSION__}</span>
     </p>
   )
 }

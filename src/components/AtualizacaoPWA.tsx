@@ -10,8 +10,13 @@ export function AtualizacaoPWA() {
     updateServiceWorker,
   } = useRegisterSW({
     onRegisteredSW(_url, reg) {
-      // Procura atualização a cada hora enquanto o app estiver aberto
-      if (reg) setInterval(() => reg.update().catch(() => {}), 60 * 60 * 1000)
+      if (!reg) return
+      // Procura versão nova ao abrir/voltar para o app e a cada 30 min.
+      // Com autoUpdate, a versão nova é instalada e a tela recarrega sozinha
+      // (o treino em andamento fica salvo e continua de onde parou).
+      const procurar = () => reg.update().catch(() => {})
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') procurar() })
+      setInterval(procurar, 30 * 60 * 1000)
     },
   })
 
