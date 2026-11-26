@@ -12,6 +12,7 @@ import type { Objetivo } from '../lib/types'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useSearchParams } from 'react-router-dom'
 import { AbaReceitas, FolhaVariacoes, PosTreinoAgora, FolhaReceita, registrarReceita } from '../components/Receitas'
+import { CardDiaAjustado, useDiaAjustado } from '../components/DiaAjustado'
 import { RECEITAS, macrosReceita, slotDoHorario, receitasPara, fatorPara, SLOT_NOME, type Receita } from '../content/receitas'
 
 type Aba = 'hoje' | 'plano' | 'receitas' | 'guias' | 'calc'
@@ -61,6 +62,7 @@ function AbaHoje() {
   const agua = useAguaDia()
   const [busca, setBusca] = useState(false)
   const [trocar, setTrocar] = useState<string | null>(null)
+  const diaAjustado = useDiaAjustado()
   const kcal = refeicoes.reduce((t, r) => t + r.kcal, 0)
   const prot = refeicoes.reduce((t, r) => t + r.proteina, 0)
   const escolhas = useLiveQuery(() => db.escolhas.where('data').equals(hojeISO()).toArray(), []) ?? []
@@ -112,9 +114,10 @@ function AbaHoje() {
         </div>
       </Card>
 
-      <PosTreinoAgora />
+      <CardDiaAjustado />
+      {!diaAjustado && <PosTreinoAgora />}
 
-      <Secao titulo="Refeições do plano">
+      <Secao titulo={diaAjustado ? 'Plano padrão (referência)' : 'Refeições do plano'}>
         <ul className="space-y-2">
           {PLANO_DIETA.map((r) => {
             const feita = refeicoes.find((x) => x.horario === r.horario && x.nome === r.nome)

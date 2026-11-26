@@ -6,10 +6,10 @@
 import { ALIMENTOS } from './alimentos'
 import type { ItemCardapio } from './dieta'
 
-export type Slot = 'cafe' | 'pos' | 'almoco' | 'lanche' | 'jantar' | 'ceia'
+export type Slot = 'cafe' | 'pre' | 'pos' | 'almoco' | 'lanche' | 'jantar' | 'ceia'
 
 export const SLOT_NOME: Record<Slot, string> = {
-  cafe: 'Café da manhã', pos: 'Pós-treino', almoco: 'Almoço', lanche: 'Lanche', jantar: 'Jantar', ceia: 'Ceia',
+  cafe: 'Café da manhã', pre: 'Pré-treino', pos: 'Pós-treino', almoco: 'Almoço', lanche: 'Lanche', jantar: 'Jantar', ceia: 'Ceia',
 }
 
 export interface Receita {
@@ -97,6 +97,29 @@ export const RECEITAS: Receita[] = [
     temperos: ['Orégano', 'Cheiro-verde', 'Alho', 'Sal e pimenta'],
     passos: ['Bata os ovos com sal, alho e orégano.', 'Misture os legumes picados e o tomate, coloque em forma untada e cubra com queijo.', 'Asse a 200 °C por 20 minutos (ou na airfryer 12-15 min).'],
     dica: 'Faça uma forma grande e corte em porções para a semana.', tags: ['ovo', 'queijo', 'legumes'], video: 'omelete de forno fit com legumes',
+  },
+
+  // ---------- Pré-treino (leve, 30-60 min antes) ----------
+  {
+    id: 'pre-whey-banana', nome: 'Whey com banana (pré-treino leve)', slots: ['pre', 'lanche'], minutos: 2,
+    itens: [i('whey'), i('banana')],
+    temperos: ['Canela', 'Água gelada ou gelo'],
+    passos: ['Bata ou agite o whey com 250 ml de água gelada.', 'Coma a banana junto. Leve, rápido e não pesa no treino.'],
+    dica: 'Bom quando falta menos de 1 hora para treinar.', tags: ['whey', 'banana'], video: 'shake de whey com banana pré treino',
+  },
+  {
+    id: 'pre-pao-mel', nome: 'Pão com queijo e mel (pré-treino)', slots: ['pre', 'lanche', 'cafe'], minutos: 3,
+    itens: [i('pao-frances'), i('queijo-minas'), i('mel', 0.5)],
+    temperos: ['Orégano no queijo (opcional)'],
+    passos: ['Abra o pão, coloque o queijo minas e um fio de mel.', 'Coma 45-90 min antes do treino.'],
+    dica: 'Carboidrato fácil de digerir + um pouco de proteína.', tags: ['queijo', 'doce'], video: 'lanche pré treino rápido',
+  },
+  {
+    id: 'pre-iogurte-banana', nome: 'Iogurte com banana e aveia (pré-treino)', slots: ['pre', 'lanche'], minutos: 2,
+    itens: [i('iogurte-grego-0'), i('banana'), i('aveia', 0.5)],
+    temperos: ['Canela', 'Mel (opcional)'],
+    passos: ['Misture o iogurte com a banana fatiada e a aveia.', 'Coma 45-60 min antes do treino.'],
+    tags: ['laticinio', 'banana', 'aveia'], video: 'iogurte com banana e aveia pré treino',
   },
 
   // ---------- Pós-treino ----------

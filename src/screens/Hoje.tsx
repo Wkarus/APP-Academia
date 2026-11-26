@@ -16,6 +16,7 @@ import { ChecklistPreTreino } from '../components/ChecklistPreTreino'
 import { db } from '../lib/db'
 import { hojeISO } from '../lib/datas'
 import { PosTreinoAgora } from '../components/Receitas'
+import { useDiaAjustado, proximaAjustada } from '../components/DiaAjustado'
 
 export default function Hoje() {
   const aj = useAjustes()
@@ -39,6 +40,8 @@ export default function Hoje() {
   const prot = refeicoes.reduce((t, r) => t + r.proteina, 0)
   const agoraHM = new Date().toTimeString().slice(0, 5)
   const proxima = PLANO_DIETA.find((r) => r.horario >= agoraHM && !refeicoes.some((x) => x.horario === r.horario)) ?? PLANO_DIETA.find((r) => !refeicoes.some((x) => x.horario === r.horario))
+  const diaAj = useDiaAjustado()
+  const proxAj = proximaAjustada(diaAj, refeicoes)
   const dica = DICAS_CALOR[new Date().getDate() % DICAS_CALOR.length]
 
   const comecar = () => {
@@ -160,7 +163,7 @@ export default function Hoje() {
         </Card>
       )}
 
-      <div className="mt-4"><PosTreinoAgora soSeRecente /></div>
+      {!diaAj && <div className="mt-4"><PosTreinoAgora soSeRecente /></div>}
 
       {/* Dieta e água */}
       <Secao titulo="Alimentação" acao={<Link to="/dieta" className="min-h-10 inline-flex items-center text-sm font-semibold text-amber">Ver dieta</Link>}>
@@ -177,7 +180,16 @@ export default function Hoje() {
               <Barra valor={prot} max={aj.metaProteina} cor="bg-ok" className="mt-2" />
             </div>
           </div>
-          {proxima && (
+          {proxAj ? (
+            <Link to="/dieta" className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-s2 p-3">
+              <div className="min-w-0">
+                <p className="text-sm text-amber">Próxima (dia ajustado) · {proxAj.horario}</p>
+                <p className="truncate font-semibold">{proxAj.nome}</p>
+                <p className="tnum text-sm text-tx2">~{proxAj.kcal} kcal · {proxAj.proteina} g proteína</p>
+              </div>
+              <span className="flex min-h-11 items-center rounded-xl bg-amber px-3 text-sm font-semibold text-bg">Opções</span>
+            </Link>
+          ) : proxima && (
             <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-s2 p-3">
               <div className="min-w-0">
                 <p className="text-sm text-amber">Próxima · {proxima.horario}</p>
@@ -186,6 +198,11 @@ export default function Hoje() {
               </div>
               <BotaoIcone icone="check" rotulo={`Registrar ${proxima.nome}`} onClick={registrarProxima} className="bg-amber text-bg" />
             </div>
+          )}
+          {!diaAj && (
+            <Link to="/dieta" className="mt-2 flex min-h-11 items-center justify-center text-sm text-tx2 underline underline-offset-2">
+              Comeu em outro horário ou vai treinar diferente? Ajustar meu dia
+            </Link>
           )}
         </Card>
 
