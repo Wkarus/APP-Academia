@@ -23,10 +23,12 @@ export default defineConfig({
   base,
   define: { __APP_VERSION__: JSON.stringify(pkg.version) },
   plugins: [
+    // %APP_VERSION% no index.html vira a versão (título da página)
+    { name: 'versao-no-titulo', transformIndexHtml: (html: string) => html.replaceAll('%APP_VERSION%', pkg.version) },
     react(),
     tailwindcss(),
     VitePWA({
-      registerType: 'prompt',
+      registerType: 'autoUpdate',
       injectRegister: false,
       includeAssets: ['icons/*.png', 'robots.txt'],
       manifest: {
@@ -55,6 +57,7 @@ export default defineConfig({
         navigateFallback: 'index.html',
         cleanupOutdatedCaches: true,
         clientsClaim: true,
+        skipWaiting: true,
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.pathname.includes('/media/ex/'),

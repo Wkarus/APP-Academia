@@ -12,6 +12,25 @@ export default function Ajustes() {
   const online = useOnline()
   const [uso, setUso] = useState<string | null>(null)
   const [baixando, setBaixando] = useState<{ feito: number; total: number } | null>(null)
+  const [atualizacao, setAtualizacao] = useState<string | null>(null)
+
+  const procurarAtualizacao = async () => {
+    setAtualizacao('Procurando…')
+    try {
+      const reg = await navigator.serviceWorker?.getRegistration()
+      if (!reg) return setAtualizacao('Atualização automática indisponível neste navegador.')
+      await reg.update()
+      if (reg.installing || reg.waiting) {
+        setAtualizacao('Versão nova encontrada. Instalando…')
+        reg.waiting?.postMessage({ type: 'SKIP_WAITING' })
+        setTimeout(() => location.reload(), 2500)
+      } else {
+        setAtualizacao(`Você já está na versão mais recente (v${__APP_VERSION__}).`)
+      }
+    } catch {
+      setAtualizacao('Sem internet agora. Tente de novo quando estiver online.')
+    }
+  }
 
   useEffect(() => {
     navigator.storage?.estimate?.().then((e) => setUso(`${((e.usage ?? 0) / 1e6).toFixed(1).replace('.', ',')} MB usados`))
@@ -102,6 +121,8 @@ export default function Ajustes() {
           <Link to="/creditos" className="flex min-h-12 items-center justify-between">Créditos e licenças <Icone nome="seta" size={18} /></Link>
           <Link to="/progresso" className="flex min-h-12 items-center justify-between border-t border-line/60">Backup (exportar/importar) <Icone nome="seta" size={18} /></Link>
         </Card>
+        <Botao variante="secundario" icone="baixar" className="mt-3 w-full" onClick={procurarAtualizacao}>Procurar atualização</Botao>
+        {atualizacao && <p className="mt-2 text-sm" role="status">{atualizacao}</p>}
         <p className="mt-3 text-xs text-tx2">FORJA v{__APP_VERSION__} · dados salvos só neste aparelho (IndexedDB) · sem anúncios, sem conta, sem servidor.</p>
       </Secao>
     </div>

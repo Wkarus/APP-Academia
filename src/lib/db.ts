@@ -1,6 +1,7 @@
 import Dexie, { type EntityTable } from 'dexie'
 import type { Agua, Ajustes, Escolha, Foto, Medida, Refeicao, Rotina, Sessao } from './types'
 import { segundaDaSemana, hojeISO } from './datas'
+import { SUP_B_V1, PRANCHA, PALLOF } from '../content/plano'
 
 class ForjaDB extends Dexie {
   ajustes!: EntityTable<Ajustes, 'id'>
@@ -53,6 +54,21 @@ export async function garantirDadosIniciais(rotinasPlano: Rotina[]) {
     if (!a) await db.ajustes.put(AJUSTES_PADRAO)
     const n = await db.rotinas.count()
     if (n === 0) await db.rotinas.bulkPut(rotinasPlano)
+    // Atualiza o Superior B para a versão nova se ainda estiver igual ao original
+    const b = await db.rotinas.get('plano-sup-b')
+    const novoB = rotinasPlano.find((r) => r.id === 'plano-sup-b')
+    if (b && novoB && b.itens.map((i) => i.exId).join('|') === SUP_B_V1.join('|')) {
+      await db.rotinas.put({ ...b, itens: novoB.itens, subtitulo: novoB.subtitulo })
+    }
+    // Core nos dias de superior (uma vez só; se a pessoa remover depois, não volta)
+    const aj = await db.ajustes.get('app')
+    if (aj && !(aj.migracoes ?? []).includes('core-v1')) {
+      for (const [id, item] of [['plano-sup-a', PRANCHA], ['plano-sup-b', PALLOF]] as const) {
+        const r = await db.rotinas.get(id)
+        if (r && !r.itens.some((i) => i.exId === item.exId)) await db.rotinas.put({ ...r, itens: [...r.itens, item] })
+      }
+      await db.ajustes.update('app', { migracoes: [...(aj.migracoes ?? []), 'core-v1'] })
+    }
   })
 }
 

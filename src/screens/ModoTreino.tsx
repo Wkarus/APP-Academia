@@ -284,7 +284,7 @@ function ExercicioAtual(p: {
             {ex.secundarios.length > 0 && <> · {ex.secundarios.slice(0, 3).map((m) => MUSCULO_PT[m]).join(', ')}</>}
           </p>
           <p className="tnum mt-1 text-sm text-tx2">
-            {cardio ? `Meta: ${item.minutos ?? 25} min moderado` : `Meta: ${item.repMin}-${item.repMax} reps · descanso ${Math.floor(item.descansoSeg / 60)}:${String(item.descansoSeg % 60).padStart(2, '0')}`}
+            {cardio ? `Meta: ${item.minutos ?? 25} min moderado` : `Meta: ${item.repMin}-${item.repMax} ${item.unidade === 'seg' ? 'segundos' : 'reps'}${item.nota ? ` ${item.nota}` : ''} · descanso ${Math.floor(item.descansoSeg / 60)}:${String(item.descansoSeg % 60).padStart(2, '0')}`}
           </p>
           <div className="mt-2 flex gap-2">
             <Botao variante="secundario" className="min-h-11 flex-1 px-3 text-sm" icone="livro" onClick={p.onComoFazer}>Como fazer</Botao>
@@ -305,8 +305,8 @@ function ExercicioAtual(p: {
         <div className="grid grid-cols-[2.25rem_1fr_4.5rem_4.5rem_3.25rem] items-center gap-2 px-1 pb-1 text-xs font-semibold uppercase tracking-wide text-tx2">
           <span className="text-center">Série</span>
           <span>Anterior</span>
-          <span className="text-center">{cardio ? '—' : 'kg'}</span>
-          <span className="text-center">{cardio ? 'min' : 'reps'}</span>
+          <span className="text-center">{cardio || item.unidade === 'seg' ? '—' : 'kg'}</span>
+          <span className="text-center">{cardio ? 'min' : item.unidade === 'seg' ? 'seg' : 'reps'}</span>
           <span className="text-center">✓</span>
         </div>
         {series.map((s) => {
@@ -318,7 +318,7 @@ function ExercicioAtual(p: {
             >
               <span className="tnum text-center font-display text-xl font-bold">{s.recorde ? <span className="text-amber" title="Recorde pessoal">★</span> : s.idx + 1}</span>
               <span className="tnum truncate text-sm text-tx2">{ant ? (cardio ? `${ant.reps} min` : `${fmt(ant.kg)} kg × ${ant.reps}`) : '—'}</span>
-              {cardio ? (
+              {cardio || item.unidade === 'seg' ? (
                 <span className="text-center text-tx2">—</span>
               ) : (
                 <input
@@ -335,7 +335,7 @@ function ExercicioAtual(p: {
               )}
               <input
                 inputMode="numeric"
-                aria-label={`${cardio ? 'Minutos' : 'Repetições'} da série ${s.idx + 1}`}
+                aria-label={`${cardio ? 'Minutos' : item.unidade === 'seg' ? 'Segundos' : 'Repetições'} da série ${s.idx + 1}`}
                 placeholder={cardio ? String(item.minutos ?? 25) : ant?.reps != null ? String(ant.reps) : `${item.repMin}-${item.repMax}`}
                 value={s.reps ?? ''}
                 onChange={(e) => st.atualizarSerie(s.exId, s.idx, { reps: e.target.value === '' ? null : parseInt(e.target.value) || 0 })}
