@@ -121,6 +121,23 @@ await page.getByText('Frango ao curry com arroz').waitFor({ state: 'detached', t
 await page.getByRole('button', { name: '✕ Frango' }).click()
 await shot('16-receitas')
 
+// Escolher treino / trocar de programa
+await page.getByRole('link', { name: 'Treinos' }).click()
+await page.getByText('Como escolher o que treinar').click()
+ok(await page.getByText('Trocar de programa:').isVisible(), 'guia "Como escolher o que treinar"')
+ok(await page.getByText(/Único dia com elevação lateral/i).isVisible(), 'foco do Superior B explicado')
+await shot('17-treinos-guia')
+await page.getByRole('link', { name: /StrongLifts/ }).click()
+await page.getByRole('button', { name: 'Usar como meu plano' }).click()
+await shot('18-confirmar-programa')
+await page.getByRole('button', { name: 'Usar como meu plano' }).last().click()
+await page.getByRole('heading', { name: /Sua semana · StrongLifts/ }).waitFor()
+ok(await page.getByText('EM USO').isVisible(), 'programa ativado como plano da semana')
+await shot('19-programa-ativo')
+await page.getByRole('button', { name: 'Voltar ao Meu plano' }).click()
+await page.getByRole('heading', { name: /Sua semana · Meu plano/ }).waitFor()
+ok(true, 'voltou ao Meu plano')
+
 await page.getByRole('link', { name: 'Progresso' }).click()
 await page.getByRole('tab', { name: 'Cargas' }).click()
 await shot('12-progresso')

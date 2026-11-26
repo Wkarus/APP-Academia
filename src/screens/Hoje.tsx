@@ -1,7 +1,7 @@
 import { useNavigate, Link } from 'react-router-dom'
 import { useState } from 'react'
 import { useAjustes, salvarAjustes } from '../lib/hooks'
-import { useRotinas, useSessoes, rotinaDoDia, sequencia, semanaAtual, diasTreinados, useRefeicoesDia, useAguaDia, somarAgua } from '../lib/consultas'
+import { useRotinas, useSessoes, rotinaDoDia, rotinasDoPlano, sequencia, semanaAtual, diasTreinados, useRefeicoesDia, useAguaDia, somarAgua } from '../lib/consultas'
 import { useExercicios, exPorId } from '../lib/exercicios'
 import { saudacao, semanaDoPlano, DIAS_CURTOS, DIAS } from '../lib/datas'
 import { useTreino } from '../lib/treino'
@@ -30,10 +30,11 @@ export default function Hoje() {
   const [checklist, setChecklist] = useState(false)
 
   const semana = semanaDoPlano(aj.inicioPlano)
-  const rotina = rotinas ? rotinaDoDia(rotinas) : null
+  const plano = aj.planoAtivo ?? 'meu'
+  const rotina = rotinas ? rotinaDoDia(rotinas, plano) : null
   const feitos = sessoes ? diasTreinados(sessoes) : new Set<string>()
   const treinouHoje = feitos.has(hojeISO())
-  const seq = sessoes && rotinas ? sequencia(sessoes, rotinas) : 0
+  const seq = sessoes && rotinas ? sequencia(sessoes, rotinas, plano) : 0
   const kcal = refeicoes.reduce((t, r) => t + r.kcal, 0)
   const prot = refeicoes.reduce((t, r) => t + r.proteina, 0)
   const agoraHM = new Date().toTimeString().slice(0, 5)
@@ -81,7 +82,7 @@ export default function Hoje() {
         <div className="mt-4 grid grid-cols-7 gap-1.5">
           {semanaAtual().map((d) => {
             const feito = feitos.has(d.iso)
-            const planejado = rotinas?.some((r) => !r.programaId && r.dias.includes(d.dow))
+            const planejado = rotinas ? rotinasDoPlano(rotinas, plano).some((r) => r.dias.includes(d.dow)) : false
             return (
               <div key={d.iso} className="flex flex-col items-center gap-1">
                 <span className={cx('text-xs', d.hoje ? 'font-bold text-amber' : 'text-tx2')}>{DIAS_CURTOS[d.dow]}</span>
@@ -130,6 +131,11 @@ export default function Hoje() {
               <Botao grande icone="play" className="w-full" onClick={comecar}>
                 {ativa ? 'Continuar treino' : treinouHoje ? 'Treinar de novo' : 'Iniciar treino'}
               </Botao>
+              {!ativa && (
+                <Link to="/treinos" className="mt-2 flex min-h-11 items-center justify-center text-sm text-tx2 underline underline-offset-2">
+                  Quer fazer outro treino hoje?
+                </Link>
+              )}
             </div>
           </Card>
         ) : (
