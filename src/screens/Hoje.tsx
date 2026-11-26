@@ -63,7 +63,10 @@ export default function Hoje() {
       {!aj.onboarding && <Boasvindas />}
       <header className="flex items-start justify-between pt-4">
         <div>
-          <p className="text-tx2">{DIAS[new Date().getDay()]}, {new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}</p>
+          <p className="flex items-center gap-2 text-tx2">
+            {DIAS[new Date().getDay()]}, {new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}
+            <span className="rounded-full border border-amber/40 px-2 py-0.5 text-xs font-semibold text-amber" title="Versão do app">v{__APP_VERSION__}</span>
+          </p>
           <h1 className="font-display text-[2.4rem] font-bold leading-none">
             {saudacao()}{aj.nome ? `, ${aj.nome}` : ''}
           </h1>

@@ -23,6 +23,8 @@ export default defineConfig({
   base,
   define: { __APP_VERSION__: JSON.stringify(pkg.version) },
   plugins: [
+    // %APP_VERSION% no index.html vira a versão (título da página)
+    { name: 'versao-no-titulo', transformIndexHtml: (html: string) => html.replaceAll('%APP_VERSION%', pkg.version) },
     react(),
     tailwindcss(),
     VitePWA({
