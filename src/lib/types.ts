@@ -46,6 +46,8 @@ export interface ItemRotina {
   descansoSeg: number
   /** Para cardio: minutos */
   minutos?: number
+  /** 'seg' = exercício por tempo (ex.: prancha); repMin/repMax viram segundos */
+  unidade?: 'seg'
   nota?: string
 }
 
@@ -124,6 +126,8 @@ export interface Ajustes {
   naoCurto?: string[]
   /** 'meu' = Meu plano; ou o id de um programa pronto em uso */
   planoAtivo?: string
+  /** migrações de conteúdo já aplicadas (para não repetir) */
+  migracoes?: string[]
 }
 
 /** Variação escolhida para uma refeição do plano num dia */
