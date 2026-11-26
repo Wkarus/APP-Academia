@@ -1,6 +1,7 @@
 import Dexie, { type EntityTable } from 'dexie'
 import type { Agua, Ajustes, Escolha, Foto, Medida, Refeicao, Rotina, Sessao } from './types'
 import { segundaDaSemana, hojeISO } from './datas'
+import { SUP_B_V1 } from '../content/plano'
 
 class ForjaDB extends Dexie {
   ajustes!: EntityTable<Ajustes, 'id'>
@@ -53,6 +54,12 @@ export async function garantirDadosIniciais(rotinasPlano: Rotina[]) {
     if (!a) await db.ajustes.put(AJUSTES_PADRAO)
     const n = await db.rotinas.count()
     if (n === 0) await db.rotinas.bulkPut(rotinasPlano)
+    // Atualiza o Superior B para a versão nova se ainda estiver igual ao original
+    const b = await db.rotinas.get('plano-sup-b')
+    const novoB = rotinasPlano.find((r) => r.id === 'plano-sup-b')
+    if (b && novoB && b.itens.map((i) => i.exId).join('|') === SUP_B_V1.join('|')) {
+      await db.rotinas.put({ ...b, itens: novoB.itens, subtitulo: novoB.subtitulo })
+    }
   })
 }
 

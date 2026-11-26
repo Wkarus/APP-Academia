@@ -29,10 +29,10 @@ export const PLANO: Rotina[] = [
     itens: [cardio('Bicycling_Stationary', 25), cardio('Elliptical_Trainer', 25)],
   },
   {
-    id: 'plano-sup-b', nome: 'Superior B', subtitulo: 'Peito alto, costas, ombro e braços', dias: [4], tipo: 'forca', progressaoPlano: true, ordem: 4,
+    id: 'plano-sup-b', nome: 'Superior B', subtitulo: 'Mesmo estilo do A, com peito alto e ombro largo', dias: [4], tipo: 'forca', progressaoPlano: true, ordem: 4,
     itens: [
-      f('Incline_Dumbbell_Press'), f('Bent_Over_Two-Dumbbell_Row'), braco('Side_Lateral_Raise'),
-      f('Close-Grip_Front_Lat_Pulldown'), braco('Hammer_Curls'), braco('Triceps_Pushdown'),
+      f('Incline_Dumbbell_Press'), f('Seated_Cable_Rows'), braco('Arnold_Dumbbell_Press'),
+      f('Underhand_Cable_Pulldowns'), braco('Side_Lateral_Raise'), braco('EZ-Bar_Skullcrusher'),
     ],
   },
   {
@@ -43,6 +43,9 @@ export const PLANO: Rotina[] = [
     ],
   },
 ]
+
+/** Exercícios da 1ª versão do Superior B — usados para atualizar quem ainda não personalizou */
+export const SUP_B_V1 = ['Incline_Dumbbell_Press', 'Bent_Over_Two-Dumbbell_Row', 'Side_Lateral_Raise', 'Close-Grip_Front_Lat_Pulldown', 'Hammer_Curls', 'Triceps_Pushdown']
 
 /** Séries efetivas no "Meu plano": semanas 1-2 = 2 séries; da semana 3 = 3 séries. */
 export function seriesDaSemana(item: ItemRotina, rotina: Rotina, semana: number) {
@@ -58,8 +61,8 @@ export const FOCO_PLANO: Record<string, { foco: string; diferenca: string }> = {
     diferenca: 'É o dia mais "pesado" de empurrar e puxar.',
   },
   'plano-sup-b': {
-    foco: 'Parte de cima do peito (supino inclinado), meio das costas (remada com os dois braços), lateral do ombro (elevação lateral), dorsal por baixo (puxada fechada), braquial/antebraço (rosca martelo) e tríceps na polia.',
-    diferenca: 'Mesmos grupos do A, mas em outros ângulos. É o único dia com elevação lateral (ombro mais largo) e peito superior.',
+    foco: 'Parte de cima do peito (supino inclinado), meio das costas (remada sentada na polia), ombro completo (desenvolvimento Arnold), dorsal e bíceps (puxada supinada), lateral do ombro (elevação lateral) e tríceps (testa com barra W).',
+    diferenca: 'Mesmo estilo pesado do A, em outros ângulos. É o único dia com elevação lateral (ombro mais largo) e peito superior.',
   },
   'plano-inf-a': {
     foco: 'Quadríceps (agachamento goblet, afundo), posteriores (stiff), glúteos (ponte), panturrilha e abdômen.',
