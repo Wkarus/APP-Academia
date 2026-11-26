@@ -50,3 +50,27 @@ export function seriesDaSemana(item: ItemRotina, rotina: Rotina, semana: number)
   if (!rotina.progressaoPlano) return item.series
   return semana <= 2 ? 2 : 3
 }
+
+/** O que cada dia do Meu plano trabalha de diferente (mostrado em Treinos) */
+export const FOCO_PLANO: Record<string, { foco: string; diferenca: string }> = {
+  'plano-sup-a': {
+    foco: 'Peito no meio (supino reto), costas em largura (puxada aberta) e espessura (remada unilateral), ombro pela frente (desenvolvimento), bíceps e tríceps.',
+    diferenca: 'É o dia mais "pesado" de empurrar e puxar.',
+  },
+  'plano-sup-b': {
+    foco: 'Parte de cima do peito (supino inclinado), meio das costas (remada com os dois braços), lateral do ombro (elevação lateral), dorsal por baixo (puxada fechada), braquial/antebraço (rosca martelo) e tríceps na polia.',
+    diferenca: 'Mesmos grupos do A, mas em outros ângulos. É o único dia com elevação lateral (ombro mais largo) e peito superior.',
+  },
+  'plano-inf-a': {
+    foco: 'Quadríceps (agachamento goblet, afundo), posteriores (stiff), glúteos (ponte), panturrilha e abdômen.',
+    diferenca: 'Foco na frente da coxa.',
+  },
+  'plano-inf-b': {
+    foco: 'Posteriores e glúteos (terra romeno), pernas uma de cada vez (búlgaro, step-up), panturrilha sentada (sóleo) e abdômen inferior.',
+    diferenca: 'Foco na parte de trás da coxa e no equilíbrio de cada perna.',
+  },
+  'plano-cardio': {
+    foco: 'Coração e recuperação: 20-30 min em ritmo de conversa.',
+    diferenca: 'Leve de propósito — não é para cansar.',
+  },
+}

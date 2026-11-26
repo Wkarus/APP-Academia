@@ -122,6 +122,8 @@ export interface Ajustes {
   telaLigada: boolean
   /** ingredientes que não gosta (filtro das receitas) */
   naoCurto?: string[]
+  /** 'meu' = Meu plano; ou o id de um programa pronto em uso */
+  planoAtivo?: string
 }
 
 /** Variação escolhida para uma refeição do plano num dia */

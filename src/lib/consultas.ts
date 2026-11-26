@@ -11,10 +11,19 @@ export function useSessoes() {
   return useLiveQuery(() => db.sessoes.orderBy('inicio').reverse().toArray(), []) ?? null
 }
 
-/** Rotina planejada para o dia da semana (prioriza o "Meu plano") */
-export function rotinaDoDia(rotinas: Rotina[], dow = new Date().getDay()) {
-  const doDia = rotinas.filter((r) => r.dias.includes(dow))
-  return doDia.find((r) => !r.programaId) ?? doDia[0] ?? null
+/**
+ * Rotinas que valem para a agenda da semana.
+ * Com o "Meu plano" ativo: as rotinas do plano. Com um programa ativo: as dele + o cardio do Meu plano.
+ */
+export function rotinasDoPlano(rotinas: Rotina[], planoAtivo = 'meu') {
+  if (planoAtivo === 'meu') return rotinas.filter((r) => !r.programaId)
+  return rotinas.filter((r) => r.programaId === planoAtivo || (!r.programaId && r.tipo === 'cardio'))
+}
+
+/** Rotina do dia da semana conforme o plano ativo (força tem prioridade sobre cardio) */
+export function rotinaDoDia(rotinas: Rotina[], planoAtivo = 'meu', dow = new Date().getDay()) {
+  const doDia = rotinasDoPlano(rotinas, planoAtivo).filter((r) => r.dias.includes(dow))
+  return doDia.find((r) => r.tipo === 'forca') ?? doDia[0] ?? null
 }
 
 export function diasTreinados(sessoes: Sessao[]) {
@@ -25,9 +34,9 @@ export function diasTreinados(sessoes: Sessao[]) {
  * Sequência: dias planejados cumpridos em seguida (dias de descanso não quebram).
  * Hoje só conta se já treinou; se hoje é dia de treino e ainda não treinou, não quebra.
  */
-export function sequencia(sessoes: Sessao[], rotinas: Rotina[]) {
+export function sequencia(sessoes: Sessao[], rotinas: Rotina[], planoAtivo = 'meu') {
   const feitos = diasTreinados(sessoes)
-  const planejados = new Set(rotinas.filter((r) => !r.programaId).flatMap((r) => r.dias))
+  const planejados = new Set(rotinasDoPlano(rotinas, planoAtivo).flatMap((r) => r.dias))
   let n = 0
   const d = new Date()
   for (let i = 0; i < 400; i++) {

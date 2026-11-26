@@ -1,11 +1,12 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { PROGRAMAS, CATEGORIAS } from '../content/programas'
 import { exPorId, useExercicios } from '../lib/exercicios'
-import { db } from '../lib/db'
 import { useTreino } from '../lib/treino'
+import { useAjustes } from '../lib/hooks'
+import { ativarPrograma, rotinasDoPrograma, voltarMeuPlano } from '../lib/planos'
+import { DIAS_CURTOS } from '../lib/datas'
 import { Botao, BotaoIcone, Card, Secao, Aviso, cx } from '../components/ui'
 import { AnimeLinhas } from './Treinos'
-import type { Rotina } from '../lib/types'
 import { useState } from 'react'
 
 export default function ProgramaDetalhe() {
@@ -13,17 +14,14 @@ export default function ProgramaDetalhe() {
   const p = PROGRAMAS.find((x) => x.id === id)
   const nav = useNavigate()
   const iniciar = useTreino((s) => s.iniciar)
-  const [salvo, setSalvo] = useState(false)
+  const aj = useAjustes()
+  const [confirmar, setConfirmar] = useState(false)
   useExercicios()
   if (!p) return <p className="pt-10 text-center">Programa não encontrado.</p>
   const anime = p.categoria === 'anime'
 
-  const rotinas: Rotina[] = p.rotinas.map((r, i) => ({ id: `${p.id}-${i}`, nome: `${p.nome}: ${r.nome}`, dias: [], tipo: 'forca', itens: r.itens, programaId: p.id, ordem: 200 + i }))
-
-  const adicionar = async () => {
-    await db.rotinas.bulkPut(rotinas)
-    setSalvo(true)
-  }
+  const rotinas = rotinasDoPrograma(p)
+  const emUso = aj.planoAtivo === p.id
 
   return (
     <div>
@@ -51,7 +49,10 @@ export default function ProgramaDetalhe() {
           {p.rotinas.map((r, i) => (
             <Card key={r.nome}>
               <div className="flex items-center justify-between gap-2">
-                <h3 className="font-display text-xl font-bold">{r.nome}</h3>
+                <div>
+                  <h3 className="font-display text-xl font-bold">{r.nome}</h3>
+                  <p className="text-xs text-amber">{rotinas[i].dias.length ? rotinas[i].dias.map((d) => DIAS_CURTOS[d]).join(' · ') : 'Alterna com as outras'}</p>
+                </div>
                 <Botao variante="secundario" icone="play" className="min-h-11" onClick={() => { iniciar(rotinas[i], 99); nav('/treino') }}>Treinar</Botao>
               </div>
               <ul className="mt-2 space-y-1 text-sm">
@@ -67,9 +68,28 @@ export default function ProgramaDetalhe() {
         </div>
       </Secao>
 
-      <Botao grande className="mt-6 w-full" icone={salvo ? 'check' : 'mais'} onClick={adicionar} disabled={salvo}>
-        {salvo ? 'Adicionado às suas rotinas' : 'Adicionar às minhas rotinas'}
-      </Botao>
+      {emUso ? (
+        <div className="mt-6 space-y-2">
+          <Aviso tipo="ok">Este é o seu plano agora. Ele aparece em Hoje nos dias marcados.</Aviso>
+          <Botao variante="secundario" className="w-full" onClick={voltarMeuPlano}>Voltar ao Meu plano</Botao>
+        </div>
+      ) : confirmar ? (
+        <div className="mt-6 space-y-3 rounded-[20px] border border-amber/40 bg-amber/5 p-4">
+          <p className="font-semibold">Trocar sua semana por {p.nome}?</p>
+          <ul className="list-disc space-y-1 pl-5 text-sm text-tx2">
+            <li>Hoje passa a mostrar este programa ({rotinas.flatMap((r) => r.dias).sort().map((d) => DIAS_CURTOS[d]).join(', ')}). O cardio leve do seu plano continua nos dias livres.</li>
+            <li>Seu Meu plano fica guardado, com histórico. Dá para voltar quando quiser.</li>
+            <li>Siga por 8-12 semanas para ver resultado. Dá para mudar os dias editando cada rotina.</li>
+          </ul>
+          <div className="flex gap-2">
+            <Botao variante="secundario" className="flex-1" onClick={() => setConfirmar(false)}>Cancelar</Botao>
+            <Botao className="flex-1" icone="check" onClick={async () => { await ativarPrograma(p); setConfirmar(false); nav('/treinos') }}>Usar como meu plano</Botao>
+          </div>
+        </div>
+      ) : (
+        <Botao grande className="mt-6 w-full" icone="halter" onClick={() => setConfirmar(true)}>Usar como meu plano</Botao>
+      )}
+      <p className="mt-2 text-center text-xs text-tx2">Quer só experimentar? Use “Treinar” em uma rotina acima — não muda sua semana.</p>
 
       <Secao titulo="Fontes">
         <ul className="space-y-2 text-sm">
