@@ -30,10 +30,10 @@ export const PLANO: Rotina[] = [
     ],
   },
   {
-    id: 'plano-inf-a', nome: 'Inferior A', subtitulo: 'Quadríceps, posteriores, glúteos e core', dias: [2], tipo: 'forca', progressaoPlano: true, ordem: 2,
+    id: 'plano-inf-a', nome: 'Inferior A', subtitulo: 'Curto (~30 min): frente da coxa, posteriores e panturrilha', dias: [2], tipo: 'forca', progressaoPlano: true, ordem: 2,
     itens: [
       f('Goblet_Squat'), f('Stiff-Legged_Dumbbell_Deadlift'), f('Dumbbell_Lunges'),
-      f('Butt_Lift_Bridge'), f('Standing_Dumbbell_Calf_Raise', 10, 15, 60), f('Crunches', 12, 15, 60),
+      f('Standing_Dumbbell_Calf_Raise', 10, 15, 60),
     ],
   },
   {
@@ -49,13 +49,17 @@ export const PLANO: Rotina[] = [
     ],
   },
   {
-    id: 'plano-inf-b', nome: 'Inferior B', subtitulo: 'Posteriores, glúteos, unilaterais e core', dias: [5], tipo: 'forca', progressaoPlano: true, ordem: 5,
+    id: 'plano-inf-b', nome: 'Inferior B', subtitulo: 'Curto (~30 min): posteriores, glúteos e uma perna de cada vez', dias: [5], tipo: 'forca', progressaoPlano: true, ordem: 5,
     itens: [
-      f('Romanian_Deadlift'), f('Split_Squat_with_Dumbbells'), f('Dumbbell_Step_Ups'),
-      f('Dumbbell_Seated_One-Leg_Calf_Raise', 10, 15, 60), f('Flat_Bench_Lying_Leg_Raise', 10, 15, 60),
+      f('Romanian_Deadlift'), f('Split_Squat_with_Dumbbells'), f('Butt_Lift_Bridge'),
+      f('Dumbbell_Seated_One-Leg_Calf_Raise', 10, 15, 60),
     ],
   },
 ]
+
+/** 1ª versão dos dias de perna — usada para atualizar quem ainda não personalizou */
+export const INF_A_V1 = ['Goblet_Squat', 'Stiff-Legged_Dumbbell_Deadlift', 'Dumbbell_Lunges', 'Butt_Lift_Bridge', 'Standing_Dumbbell_Calf_Raise', 'Crunches']
+export const INF_B_V1 = ['Romanian_Deadlift', 'Split_Squat_with_Dumbbells', 'Dumbbell_Step_Ups', 'Dumbbell_Seated_One-Leg_Calf_Raise', 'Flat_Bench_Lying_Leg_Raise']
 
 /** Exercícios da 1ª versão do Superior B — usados para atualizar quem ainda não personalizou */
 export const SUP_B_V1 = ['Incline_Dumbbell_Press', 'Bent_Over_Two-Dumbbell_Row', 'Side_Lateral_Raise', 'Close-Grip_Front_Lat_Pulldown', 'Hammer_Curls', 'Triceps_Pushdown']
@@ -79,12 +83,12 @@ export const FOCO_PLANO: Record<string, { foco: string; diferenca: string }> = {
     diferenca: 'Mesmo estilo pesado do A, em outros ângulos. É o único dia com elevação lateral (ombro mais largo) e peito superior. Fecha com Pallof (abdômen e oblíquos resistindo à rotação).',
   },
   'plano-inf-a': {
-    foco: 'Quadríceps (agachamento goblet, afundo), posteriores (stiff), glúteos (ponte), panturrilha e abdômen.',
-    diferenca: 'Foco na frente da coxa.',
+    foco: 'Quadríceps (agachamento goblet, afundo), posteriores (stiff) e panturrilha. Só 4 exercícios, ~30 min.',
+    diferenca: 'Foco na frente da coxa. Curto de propósito para não pular: melhor 30 min feitos que 60 min planejados.',
   },
   'plano-inf-b': {
-    foco: 'Posteriores e glúteos (terra romeno), pernas uma de cada vez (búlgaro, step-up), panturrilha sentada (sóleo) e abdômen inferior.',
-    diferenca: 'Foco na parte de trás da coxa e no equilíbrio de cada perna.',
+    foco: 'Posteriores e glúteos (terra romeno, ponte), uma perna de cada vez (búlgaro) e panturrilha sentada. Só 4 exercícios, ~30 min.',
+    diferenca: 'Foco na parte de trás da coxa e glúteos. O abdômen saiu daqui e foi para os dias de superior e de cardio.',
   },
   'plano-cardio': {
     foco: 'Coração e recuperação: 20-30 min em ritmo de conversa (bicicleta OU elíptico — escolha um). Depois, circuito de core: dead bug, prancha lateral e abdominal reverso.',

@@ -1,7 +1,7 @@
 import Dexie, { type EntityTable } from 'dexie'
 import type { Agua, Ajustes, Escolha, Foto, Medida, Refeicao, Rotina, Sessao } from './types'
 import { segundaDaSemana, hojeISO } from './datas'
-import { SUP_B_V1, PRANCHA, PALLOF, CIRCUITO_CORE } from '../content/plano'
+import { SUP_B_V1, INF_A_V1, INF_B_V1, PRANCHA, PALLOF, CIRCUITO_CORE } from '../content/plano'
 
 class ForjaDB extends Dexie {
   ajustes!: EntityTable<Ajustes, 'id'>
@@ -79,6 +79,14 @@ export async function garantirDadosIniciais(rotinasPlano: Rotina[]) {
         await db.rotinas.put({ ...c, nome: novoC.nome, subtitulo: novoC.subtitulo, itens: [...c.itens, ...faltam] })
       }
       await db.ajustes.update('app', { migracoes: [...(aj2.migracoes ?? []), 'core-cardio-v1'] })
+    }
+    // Dias de perna mais curtos (só se ainda estiverem como no plano original)
+    for (const [id, v1] of [['plano-inf-a', INF_A_V1], ['plano-inf-b', INF_B_V1]] as const) {
+      const r = await db.rotinas.get(id)
+      const novo = rotinasPlano.find((x) => x.id === id)
+      if (r && novo && r.itens.map((i) => i.exId).join('|') === v1.join('|')) {
+        await db.rotinas.put({ ...r, itens: novo.itens, subtitulo: novo.subtitulo })
+      }
     }
   })
 }
