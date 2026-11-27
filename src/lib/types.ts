@@ -96,6 +96,10 @@ export interface Refeicao {
   kcal: number
   proteina: number
   itens?: { alimentoId?: string; nome: string; qtd: number; kcal: number; proteina: number }[]
+  /** horário da refeição do plano a que este registro corresponde (ex.: '13:00' = almoço) */
+  planoHorario?: string
+  /** true = a pessoa pulou essa refeição do plano */
+  pulada?: boolean
 }
 export interface Agua { data: string; ml: number }
 

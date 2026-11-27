@@ -1,14 +1,13 @@
-import { useMemo, useState } from 'react'
-import { useLiveQuery } from 'dexie-react-hooks'
+import { useState } from 'react'
 import { db } from '../lib/db'
-import { hojeISO, duracao } from '../lib/datas'
-import { useAjustes, salvarAjustes, useAgora } from '../lib/hooks'
+import { hojeISO } from '../lib/datas'
+import { useAjustes, salvarAjustes } from '../lib/hooks'
 import { normalizar } from '../lib/exercicios'
 import { ALIMENTOS } from '../content/alimentos'
 import {
-  RECEITAS, SLOT_NOME, NAO_CURTO, TEMPEROS, CANAIS, macrosReceita, fatorPara, receitasPara, linkVideo, type Receita, type Slot,
+  RECEITAS, SLOT_NOME, NAO_CURTO, TEMPEROS, CANAIS, macrosReceita, linkVideo, type Receita, type Slot,
 } from '../content/receitas'
-import { Botao, BotaoIcone, Card, Chip, Folha, Aviso, Secao, cx } from './ui'
+import { Botao, BotaoIcone, Chip, Folha, Aviso, Secao, cx } from './ui'
 import { Icone } from './Icone'
 
 const r0 = (n: number) => Math.round(n)
@@ -112,104 +111,6 @@ export function FolhaReceita({ r, fatorInicial = 1, onFechar, acoes }: { r: Rece
         {acoes?.(fator)}
       </div>
     </Folha>
-  )
-}
-
-/** Escolher a variação de uma refeição do plano (porção ajustada às calorias dela) */
-export function FolhaVariacoes({ slot, horario, nomePlano, kcalAlvo, onFechar }: { slot: Slot; horario: string; nomePlano: string; kcalAlvo: number; onFechar: () => void }) {
-  const naoCurto = useNaoCurto()
-  const [ver, setVer] = useState<Receita | null>(null)
-  const lista = receitasPara(slot, naoCurto)
-  const chave = `${hojeISO()}|${horario}`
-  const escolher = async (r: Receita | null, fator = 1) => {
-    if (!r) await db.escolhas.delete(chave)
-    else await db.escolhas.put({ chave, data: hojeISO(), horario, receitaId: r.id, fator })
-    onFechar()
-  }
-  return (
-    <Folha aberta onFechar={onFechar} titulo={`Trocar: ${nomePlano}`} alta>
-      <p className="mb-3 text-sm text-tx2">Porções ajustadas para ~{r0(kcalAlvo)} kcal. Toque para ver a receita; use ✓ para escolher.</p>
-      <button onClick={() => escolher(null)} className="mb-3 flex min-h-12 w-full items-center justify-between rounded-2xl border border-dashed border-line px-3 text-left text-sm">
-        Voltar ao cardápio original do plano <Icone nome="voltar" size={18} />
-      </button>
-      {lista.length === 0 && <Aviso>Nenhuma receita sem os ingredientes que você marcou em "Não curto". Ajuste o filtro na aba Receitas.</Aviso>}
-      <div className="space-y-2">
-        {lista.map((r) => {
-          const f = fatorPara(r, kcalAlvo)
-          return (
-            <CardReceita
-              key={r.id}
-              r={r}
-              fator={f}
-              onClick={() => setVer(r)}
-              extra={<button aria-label={`Escolher ${r.nome}`} onClick={() => escolher(r, f)} className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber text-bg"><Icone nome="check" size={20} strokeWidth={3} /></button>}
-            />
-          )
-        })}
-      </div>
-      {ver && (
-        <FolhaReceita r={ver} fatorInicial={fatorPara(ver, kcalAlvo)} onFechar={() => setVer(null)} acoes={(f) => <Botao grande className="w-full" icone="check" onClick={() => { setVer(null); escolher(ver, f) }}>Usar em {nomePlano}</Botao>} />
-      )}
-    </Folha>
-  )
-}
-
-/**
- * "Treinei agora": se o último treino terminou há menos de 2h30 (ou você tocou em "Treinei agora"),
- * sugere refeições pós-treino com ~35-45 g de proteína.
- */
-export function PosTreinoAgora({ forcar = false, soSeRecente = false }: { forcar?: boolean; soSeRecente?: boolean }) {
-  const agora = useAgora(60000)
-  const naoCurto = useNaoCurto()
-  const ultima = useLiveQuery(() => db.sessoes.orderBy('inicio').last(), [])
-  const [manual, setManual] = useState<number | null>(() => {
-    try { const v = Number(localStorage.getItem('forja-treinei-agora')); return v && Date.now() - v < 3 * 3600e3 ? v : null } catch { return null }
-  })
-  const [ver, setVer] = useState<Receita | null>(null)
-  const [ok, setOk] = useState(false)
-  const fim = Math.max(ultima?.fim ?? 0, manual ?? 0)
-  const recente = fim && agora - fim < 2.5 * 3600e3
-  const sugestoes = useMemo(() => receitasPara('pos', naoCurto).slice(0, 4), [naoCurto])
-
-  const marcar = () => {
-    const t = Date.now()
-    try { localStorage.setItem('forja-treinei-agora', String(t)) } catch { /* ok */ }
-    setManual(t)
-  }
-
-  if (!recente && !forcar) {
-    if (soSeRecente) return null
-    return (
-      <button onClick={marcar} className="flex min-h-14 w-full items-center justify-between gap-3 rounded-2xl border border-dashed border-amber/50 px-4 text-left">
-        <span><span className="block font-semibold">Treinei agora (fora do horário)</span><span className="block text-sm text-tx2">Mostra o que comer no pós-treino</span></span>
-        <Icone nome="halter" className="shrink-0 text-amber" />
-      </button>
-    )
-  }
-
-  return (
-    <Card className="border-amber/40 bg-gradient-to-br from-amber/15 to-s1">
-      <div className="flex items-start gap-3">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber text-bg"><Icone nome="halter" /></span>
-        <div>
-          <p className="font-display text-2xl font-bold leading-tight">O que comer agora</p>
-          <p className="text-sm text-tx2">
-            {fim ? `Treino há ${duracao(agora - fim)}.` : ''} Pós-treino: 30-45 g de proteína + carboidrato, em até 1-2 h. Isso substitui o lanche mais próximo — o jantar segue normal.
-          </p>
-        </div>
-      </div>
-      {ok && <Aviso tipo="ok" className="mt-3">Registrado! Se já tinha comido o lanche, deixe a ceia mais leve.</Aviso>}
-      <div className="mt-3 space-y-2">
-        {sugestoes.map((r) => {
-          const f = fatorPara(r, 420)
-          return <CardReceita key={r.id} r={r} fator={f} onClick={() => setVer(r)} />
-        })}
-      </div>
-      {ver && (
-        <FolhaReceita r={ver} fatorInicial={fatorPara(ver, 420)} onFechar={() => setVer(null)}
-          acoes={(f) => <Botao grande className="w-full" icone="check" onClick={async () => { await registrarReceita(ver, f, undefined, `Pós-treino: ${ver.nome}`); setVer(null); setOk(true) }}>Comi isso agora</Botao>} />
-      )}
-    </Card>
   )
 }
 

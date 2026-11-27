@@ -6,17 +6,15 @@ import { useExercicios, exPorId } from '../lib/exercicios'
 import { saudacao, semanaDoPlano, DIAS_CURTOS, DIAS } from '../lib/datas'
 import { useTreino } from '../lib/treino'
 import { seriesDaSemana } from '../content/plano'
-import { PLANO_DIETA, totaisItens } from '../content/dieta'
 import { DICAS_CALOR } from '../content/cuidado'
 import { Card, Botao, Barra, Esqueleto, Secao, BotaoIcone, Aviso, cx } from '../components/ui'
 import { Icone } from '../components/Icone'
 import { MidiaExercicio } from '../components/MidiaExercicio'
 import { Boasvindas } from '../components/Boasvindas'
 import { ChecklistPreTreino } from '../components/ChecklistPreTreino'
-import { db } from '../lib/db'
 import { hojeISO } from '../lib/datas'
-import { PosTreinoAgora } from '../components/Receitas'
-import { useDiaAjustado, proximaAjustada } from '../components/DiaAjustado'
+import { BotaoComerAgora } from '../components/ComerAgora'
+import { useDiaRefeicoes } from '../lib/refeicoesDia'
 
 export default function Hoje() {
   const aj = useAjustes()
@@ -36,12 +34,10 @@ export default function Hoje() {
   const feitos = sessoes ? diasTreinados(sessoes) : new Set<string>()
   const treinouHoje = feitos.has(hojeISO())
   const seq = sessoes && rotinas ? sequencia(sessoes, rotinas, plano) : 0
-  const kcal = refeicoes.reduce((t, r) => t + r.kcal, 0)
-  const prot = refeicoes.reduce((t, r) => t + r.proteina, 0)
-  const agoraHM = new Date().toTimeString().slice(0, 5)
-  const proxima = PLANO_DIETA.find((r) => r.horario >= agoraHM && !refeicoes.some((x) => x.horario === r.horario)) ?? PLANO_DIETA.find((r) => !refeicoes.some((x) => x.horario === r.horario))
-  const diaAj = useDiaAjustado()
-  const proxAj = proximaAjustada(diaAj, refeicoes)
+  const kcal = refeicoes.filter((r) => !r.pulada).reduce((t, r) => t + r.kcal, 0)
+  const prot = refeicoes.filter((r) => !r.pulada).reduce((t, r) => t + r.proteina, 0)
+  const diaRef = useDiaRefeicoes()
+  const proxima = diaRef.proxima
   const dica = DICAS_CALOR[new Date().getDate() % DICAS_CALOR.length]
 
   const comecar = () => {
@@ -52,11 +48,7 @@ export default function Hoje() {
     nav('/treino')
   }
 
-  const registrarProxima = async () => {
-    if (!proxima) return
-    const t = totaisItens(proxima.itens)
-    await db.refeicoes.add({ data: hojeISO(), horario: proxima.horario, nome: proxima.nome, kcal: Math.round(t.kcal), proteina: Math.round(t.proteina) })
-  }
+
 
   return (
     <div>
@@ -166,8 +158,6 @@ export default function Hoje() {
         </Card>
       )}
 
-      {!diaAj && <div className="mt-4"><PosTreinoAgora soSeRecente /></div>}
-
       {/* Dieta e água */}
       <Secao titulo="Alimentação" acao={<Link to="/dieta" className="min-h-10 inline-flex items-center text-sm font-semibold text-amber">Ver dieta</Link>}>
         <Card>
@@ -183,30 +173,17 @@ export default function Hoje() {
               <Barra valor={prot} max={aj.metaProteina} cor="bg-ok" className="mt-2" />
             </div>
           </div>
-          {proxAj ? (
+          {proxima && (
             <Link to="/dieta" className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-s2 p-3">
               <div className="min-w-0">
-                <p className="text-sm text-amber">Próxima (dia ajustado) · {proxAj.horario}</p>
-                <p className="truncate font-semibold">{proxAj.nome}</p>
-                <p className="tnum text-sm text-tx2">~{proxAj.kcal} kcal · {proxAj.proteina} g proteína</p>
+                <p className="text-sm text-amber">Próxima refeição</p>
+                <p className="truncate font-semibold">{proxima.plano.nome.replace(/ \(.*\)/, '')}</p>
+                <p className="tnum text-sm text-tx2">Meta: ~{proxima.alvoKcal} kcal · {proxima.alvoProt} g proteína</p>
               </div>
-              <span className="flex min-h-11 items-center rounded-xl bg-amber px-3 text-sm font-semibold text-bg">Opções</span>
-            </Link>
-          ) : proxima && (
-            <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-s2 p-3">
-              <div className="min-w-0">
-                <p className="text-sm text-amber">Próxima · {proxima.horario}</p>
-                <p className="truncate font-semibold">{proxima.nome}</p>
-                <p className="tnum text-sm text-tx2">{Math.round(totaisItens(proxima.itens).kcal)} kcal · {Math.round(totaisItens(proxima.itens).proteina)} g proteína</p>
-              </div>
-              <BotaoIcone icone="check" rotulo={`Registrar ${proxima.nome}`} onClick={registrarProxima} className="bg-amber text-bg" />
-            </div>
-          )}
-          {!diaAj && (
-            <Link to="/dieta" className="mt-2 flex min-h-11 items-center justify-center text-sm text-tx2 underline underline-offset-2">
-              Comeu em outro horário ou vai treinar diferente? Ajustar meu dia
+              <Icone nome="seta" size={18} className="shrink-0 text-tx2" />
             </Link>
           )}
+          <BotaoComerAgora className="mt-3" />
         </Card>
 
         <Card className="mt-3">

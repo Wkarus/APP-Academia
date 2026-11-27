@@ -384,7 +384,7 @@ function Resumo({ sessao, onFechar }: { sessao: Sessao; onFechar: () => void }) 
           {recordes.map((r, i) => <li key={i} className="rounded-xl bg-amber/10 p-2">★ {exPorId(r.exId)?.nome}: {fmt(r.kg)} kg × {r.reps}</li>)}
         </ul>
       )}
-      <Botao grande onClick={() => { onFechar(); setTimeout(() => (location.hash = '#/dieta'), 0) }} icone="prato">O que comer agora</Botao>
+      <Botao grande onClick={() => { onFechar(); setTimeout(() => (location.hash = '#/dieta?agora=1'), 0) }} icone="prato">O que comer agora</Botao>
       <Botao grande variante="secundario" onClick={onFechar}>Voltar para Hoje</Botao>
     </div>
   )

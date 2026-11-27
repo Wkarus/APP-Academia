@@ -1,22 +1,17 @@
-import { useMemo, useState } from 'react'
-import { db } from '../lib/db'
-import { hojeISO } from '../lib/datas'
+import { useState } from 'react'
 import { useAjustes, salvarAjustes } from '../lib/hooks'
 import { useRefeicoesDia, useAguaDia, somarAgua } from '../lib/consultas'
-import { normalizar } from '../lib/exercicios'
-import { ALIMENTOS, INGREDIENTES_ESCONDIDOS, type Alimento } from '../content/alimentos'
+import { ALIMENTOS, INGREDIENTES_ESCONDIDOS } from '../content/alimentos'
 import { PLANO_DIETA, totaisItens, GUIAS, ATIVIDADES, OBJETIVOS, calcularMacros, type GuiaDieta } from '../content/dieta'
-import { Titulo, Abas, Card, Botao, BotaoIcone, Barra, Interruptor, Aviso, Folha, Chip, Secao, cx } from '../components/ui'
+import { Titulo, Abas, Card, Botao, Barra, Interruptor, Aviso, Folha, Chip } from '../components/ui'
 import { Icone } from '../components/Icone'
 import type { Objetivo } from '../lib/types'
-import { useLiveQuery } from 'dexie-react-hooks'
 import { useSearchParams } from 'react-router-dom'
-import { AbaReceitas, FolhaVariacoes, PosTreinoAgora, FolhaReceita, registrarReceita } from '../components/Receitas'
-import { CardDiaAjustado, useDiaAjustado } from '../components/DiaAjustado'
-import { RECEITAS, macrosReceita, slotDoHorario, receitasPara, fatorPara, SLOT_NOME, type Receita } from '../content/receitas'
+import { AbaReceitas, FolhaReceita } from '../components/Receitas'
+import { BotaoComerAgora, FolhaComerAgora, ListaRefeicoesHoje } from '../components/ComerAgora'
+import { slotDoHorario, receitasPara, fatorPara, SLOT_NOME, type Receita } from '../content/receitas'
 
 type Aba = 'hoje' | 'plano' | 'receitas' | 'guias' | 'calc'
-const COM_PEIXE = new Set(['pizza-aliche', 'caesar'])
 const r0 = (n: number) => Math.round(n)
 
 export default function Dieta() {
@@ -60,26 +55,11 @@ function AbaHoje() {
   const aj = useAjustes()
   const refeicoes = useRefeicoesDia()
   const agua = useAguaDia()
-  const [busca, setBusca] = useState(false)
-  const [trocar, setTrocar] = useState<string | null>(null)
-  const diaAjustado = useDiaAjustado()
-  const kcal = refeicoes.reduce((t, r) => t + r.kcal, 0)
-  const prot = refeicoes.reduce((t, r) => t + r.proteina, 0)
-  const escolhas = useLiveQuery(() => db.escolhas.where('data').equals(hojeISO()).toArray(), []) ?? []
-  const escolhaDe = (h: string) => {
-    const e = escolhas.find((x) => x.horario === h)
-    const rec = e ? RECEITAS.find((x) => x.id === e.receitaId) : undefined
-    return e && rec ? { rec, fator: e.fator } : null
-  }
-
-  const registrarPlano = async (h: string) => {
-    const r = PLANO_DIETA.find((x) => x.horario === h)!
-    const esc = escolhaDe(h)
-    if (esc) return registrarReceita(esc.rec, esc.fator, r.horario, r.nome)
-    const t = totaisItens(r.itens)
-    await db.refeicoes.add({ data: hojeISO(), horario: r.horario, nome: r.nome, kcal: r0(t.kcal), proteina: r0(t.proteina) })
-  }
-  const trocando = PLANO_DIETA.find((x) => x.horario === trocar)
+  const [params] = useSearchParams()
+  const [agora, setAgora] = useState(params.get('agora') === '1')
+  const validas = refeicoes.filter((r) => !r.pulada)
+  const kcal = validas.reduce((t, r) => t + r.kcal, 0)
+  const prot = validas.reduce((t, r) => t + r.proteina, 0)
 
   return (
     <div className="space-y-4">
@@ -100,6 +80,10 @@ function AbaHoje() {
         </div>
       </Card>
 
+      <BotaoComerAgora />
+
+      <ListaRefeicoesHoje />
+
       <Card>
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2"><Icone nome="gota" className="text-info" /><span className="font-semibold">Água</span></div>
@@ -113,119 +97,8 @@ function AbaHoje() {
           <Botao onClick={() => somarAgua(500)} className="tnum">+500</Botao>
         </div>
       </Card>
-
-      <CardDiaAjustado />
-      {!diaAjustado && <PosTreinoAgora />}
-
-      <Secao titulo={diaAjustado ? 'Plano padrão (referência)' : 'Refeições do plano'}>
-        <ul className="space-y-2">
-          {PLANO_DIETA.map((r) => {
-            const feita = refeicoes.find((x) => x.horario === r.horario && x.nome === r.nome)
-            const esc = escolhaDe(r.horario)
-            const t = esc ? macrosReceita(esc.rec, esc.fator) : totaisItens(r.itens)
-            return (
-              <li key={r.horario} className={cx('flex items-center gap-2 rounded-2xl p-3', feita ? 'bg-ok/10' : 'bg-s1')}>
-                <span className="tnum w-12 shrink-0 font-display text-lg font-bold text-amber">{r.horario}</span>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate font-semibold">{r.nome}</p>
-                  {esc && <p className="truncate text-sm text-amber">{esc.rec.nome}</p>}
-                  <p className="tnum text-sm text-tx2">{r0(t.kcal)} kcal · {r0(t.proteina)} g</p>
-                </div>
-                {!feita && <BotaoIcone icone="trocar" rotulo={`Trocar ${r.nome}`} onClick={() => setTrocar(r.horario)} />}
-                {feita ? (
-                  <BotaoIcone icone="x" rotulo={`Desfazer ${r.nome}`} onClick={() => db.refeicoes.delete(feita.id!)} />
-                ) : (
-                  <BotaoIcone icone="check" rotulo={`Registrar ${r.nome}`} className="bg-amber text-bg" onClick={() => registrarPlano(r.horario)} />
-                )}
-              </li>
-            )
-          })}
-        </ul>
-      </Secao>
-
-      <Secao titulo="Outros registros" acao={<Botao variante="secundario" icone="mais" className="min-h-10" onClick={() => setBusca(true)}>Alimento</Botao>}>
-        {refeicoes.filter((x) => !PLANO_DIETA.some((p) => p.horario === x.horario && p.nome === x.nome)).length === 0 ? (
-          <p className="text-sm text-tx2">Comeu algo fora do plano? Registre aqui pelo banco de alimentos.</p>
-        ) : (
-          <ul className="space-y-2">
-            {refeicoes.filter((x) => !PLANO_DIETA.some((p) => p.horario === x.horario && p.nome === x.nome)).map((x) => (
-              <li key={x.id} className="flex items-center gap-3 rounded-2xl bg-s1 p-3">
-                <span className="tnum w-12 shrink-0 text-tx2">{x.horario}</span>
-                <div className="min-w-0 flex-1"><p className="truncate">{x.nome}</p><p className="tnum text-sm text-tx2">{x.kcal} kcal · {x.proteina} g</p></div>
-                <BotaoIcone icone="lixo" rotulo="Remover" onClick={() => db.refeicoes.delete(x.id!)} />
-              </li>
-            ))}
-          </ul>
-        )}
-      </Secao>
-      {busca && <BuscaAlimento onFechar={() => setBusca(false)} />}
-      {trocando && (
-        <FolhaVariacoes slot={slotDoHorario(trocando.horario)} horario={trocando.horario} nomePlano={trocando.nome} kcalAlvo={totaisItens(trocando.itens).kcal} onFechar={() => setTrocar(null)} />
-      )}
+      {agora && <FolhaComerAgora onFechar={() => setAgora(false)} />}
     </div>
-  )
-}
-
-function BuscaAlimento({ onFechar }: { onFechar: () => void }) {
-  const aj = useAjustes()
-  const [q, setQ] = useState('')
-  const [sel, setSel] = useState<Alimento | null>(null)
-  const [qtd, setQtd] = useState(1)
-  const [manual, setManual] = useState({ nome: '', kcal: '', proteina: '' })
-  const lista = useMemo(() => {
-    const n = normalizar(q)
-    return ALIMENTOS.filter((a) => (!aj.semPeixe || !COM_PEIXE.has(a.id)) && (!n || normalizar(a.nome).includes(n)))
-  }, [q, aj.semPeixe])
-
-  const salvar = async (nome: string, kcal: number, proteina: number) => {
-    await db.refeicoes.add({ data: hojeISO(), horario: new Date().toTimeString().slice(0, 5), nome, kcal: r0(kcal), proteina: r0(proteina) })
-    onFechar()
-  }
-
-  return (
-    <Folha aberta onFechar={onFechar} titulo="Registrar alimento" alta>
-      {sel ? (
-        <div className="space-y-4">
-          <p className="font-display text-2xl font-bold">{sel.nome}</p>
-          <p className="text-tx2">Porção: {sel.porcao}</p>
-          {sel.alerta && <Aviso tipo="alerta">{sel.alerta}</Aviso>}
-          <div className="flex items-center justify-center gap-3">
-            <BotaoIcone icone="menos" rotulo="Menos meia porção" onClick={() => setQtd(Math.max(0.5, qtd - 0.5))} />
-            <span className="tnum w-24 text-center font-display text-3xl font-bold">{String(qtd).replace('.', ',')}×</span>
-            <BotaoIcone icone="mais" rotulo="Mais meia porção" onClick={() => setQtd(qtd + 0.5)} />
-          </div>
-          <p className="tnum text-center text-lg">{r0(sel.kcal * qtd)} kcal · {r0(sel.proteina * qtd)} g proteína</p>
-          <div className="flex gap-2">
-            <Botao variante="secundario" className="flex-1" onClick={() => setSel(null)}>Voltar</Botao>
-            <Botao className="flex-1" onClick={() => salvar(`${sel.nome}${qtd !== 1 ? ` (${String(qtd).replace('.', ',')}×)` : ''}`, sel.kcal * qtd, sel.proteina * qtd)}>Registrar</Botao>
-          </div>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar alimento (arroz, frango, ovo…)" className="min-h-12 w-full rounded-2xl border border-line bg-s2 px-4" autoFocus />
-          <ul className="space-y-1">
-            {lista.map((a) => (
-              <li key={a.id}>
-                <button onClick={() => { setSel(a); setQtd(1) }} className="flex min-h-14 w-full items-center justify-between gap-3 rounded-xl bg-s2 px-3 text-left">
-                  <span className="min-w-0"><span className="block truncate">{a.nome}{a.alerta && <span className="ml-1 text-warn" title={a.alerta}>⚠</span>}</span><span className="text-xs text-tx2">{a.porcao}</span></span>
-                  <span className="tnum shrink-0 text-sm text-tx2">{a.kcal} kcal · {a.proteina} g</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-          <details className="rounded-2xl bg-s2 p-3">
-            <summary className="min-h-10 cursor-pointer font-semibold">Registrar manualmente</summary>
-            <div className="mt-2 grid grid-cols-2 gap-2">
-              <input className="col-span-2 min-h-12 rounded-xl bg-s1 px-3" placeholder="Nome" value={manual.nome} onChange={(e) => setManual({ ...manual, nome: e.target.value })} />
-              <input className="min-h-12 rounded-xl bg-s1 px-3" inputMode="numeric" placeholder="kcal" value={manual.kcal} onChange={(e) => setManual({ ...manual, kcal: e.target.value })} />
-              <input className="min-h-12 rounded-xl bg-s1 px-3" inputMode="numeric" placeholder="proteína (g)" value={manual.proteina} onChange={(e) => setManual({ ...manual, proteina: e.target.value })} />
-              <Botao className="col-span-2" disabled={!manual.nome || !manual.kcal} onClick={() => salvar(manual.nome, Number(manual.kcal) || 0, Number(manual.proteina) || 0)}>Registrar</Botao>
-            </div>
-          </details>
-          <p className="text-xs text-tx2">Valores aproximados (TACO/NEPA-UNICAMP e rótulos comuns).</p>
-        </div>
-      )}
-    </Folha>
   )
 }
 

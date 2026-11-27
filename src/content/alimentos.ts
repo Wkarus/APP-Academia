@@ -119,6 +119,8 @@ export const ALIMENTOS: Alimento[] = [
   a('chocolate-70', 'Chocolate 70%', '2 quadrados (20 g)', 20, 110, 1.8, 'lanche'),
   a('cafe', 'Café sem açúcar', '1 xícara', 100, 2, 0.1, 'bebida'),
   a('cafe-leite', 'Café com leite desnatado', '1 xícara (200 ml)', 200, 70, 6, 'bebida'),
+  a('cappuccino', 'Cappuccino (padaria ou pó)', '1 xícara (200 ml)', 200, 120, 4, 'bebida'),
+  a('ovos-mexidos', 'Ovos mexidos (3 ovos)', '1 porção', 150, 230, 19.5, 'proteina'),
   a('suco-laranja', 'Suco de laranja natural', '1 copo (250 ml)', 250, 110, 1.7, 'bebida'),
   a('agua-coco', 'Água de coco', '1 copo (300 ml)', 300, 66, 0, 'bebida'),
   a('pf', 'PF (arroz, feijão, bife, salada)', '1 prato', 450, 650, 40, 'pronto'),
