@@ -80,6 +80,17 @@ export async function garantirDadosIniciais(rotinasPlano: Rotina[]) {
       }
       await db.ajustes.update('app', { migracoes: [...(aj2.migracoes ?? []), 'core-cardio-v1'] })
     }
+    // Corrida no sábado: o cardio leve fica só na quarta (uma vez só)
+    const aj3 = await db.ajustes.get('app')
+    if (aj3 && !(aj3.migracoes ?? []).includes('corrida-v1')) {
+      const corrida = rotinasPlano.find((r) => r.id === 'plano-corrida')
+      if (corrida && !(await db.rotinas.get('plano-corrida'))) {
+        const c = await db.rotinas.get('plano-cardio')
+        if (c && c.dias.includes(6)) await db.rotinas.put({ ...c, dias: c.dias.filter((d) => d !== 6) })
+        await db.rotinas.put(corrida)
+      }
+      await db.ajustes.update('app', { migracoes: [...(aj3.migracoes ?? []), 'corrida-v1'] })
+    }
     // Dias de perna mais curtos (só se ainda estiverem como no plano original)
     for (const [id, v1] of [['plano-inf-a', INF_A_V1], ['plano-inf-b', INF_B_V1]] as const) {
       const r = await db.rotinas.get(id)
