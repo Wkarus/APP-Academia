@@ -1,7 +1,7 @@
 import Dexie, { type EntityTable } from 'dexie'
 import type { Agua, Ajustes, Escolha, Foto, Medida, Refeicao, Rotina, Sessao } from './types'
 import { segundaDaSemana, hojeISO } from './datas'
-import { SUP_B_V1, PRANCHA, PALLOF } from '../content/plano'
+import { SUP_B_V1, INF_A_V1, INF_B_V1, PRANCHA, PALLOF, CIRCUITO_CORE } from '../content/plano'
 
 class ForjaDB extends Dexie {
   ajustes!: EntityTable<Ajustes, 'id'>
@@ -68,6 +68,36 @@ export async function garantirDadosIniciais(rotinasPlano: Rotina[]) {
         if (r && !r.itens.some((i) => i.exId === item.exId)) await db.rotinas.put({ ...r, itens: [...r.itens, item] })
       }
       await db.ajustes.update('app', { migracoes: [...(aj.migracoes ?? []), 'core-v1'] })
+    }
+    // Circuito de core nos dias de cardio (uma vez só)
+    const aj2 = await db.ajustes.get('app')
+    if (aj2 && !(aj2.migracoes ?? []).includes('core-cardio-v1')) {
+      const c = await db.rotinas.get('plano-cardio')
+      const novoC = rotinasPlano.find((r) => r.id === 'plano-cardio')
+      if (c && novoC) {
+        const faltam = CIRCUITO_CORE.filter((x) => !c.itens.some((i) => i.exId === x.exId))
+        await db.rotinas.put({ ...c, nome: novoC.nome, subtitulo: novoC.subtitulo, itens: [...c.itens, ...faltam] })
+      }
+      await db.ajustes.update('app', { migracoes: [...(aj2.migracoes ?? []), 'core-cardio-v1'] })
+    }
+    // Corrida no sábado: o cardio leve fica só na quarta (uma vez só)
+    const aj3 = await db.ajustes.get('app')
+    if (aj3 && !(aj3.migracoes ?? []).includes('corrida-v1')) {
+      const corrida = rotinasPlano.find((r) => r.id === 'plano-corrida')
+      if (corrida && !(await db.rotinas.get('plano-corrida'))) {
+        const c = await db.rotinas.get('plano-cardio')
+        if (c && c.dias.includes(6)) await db.rotinas.put({ ...c, dias: c.dias.filter((d) => d !== 6) })
+        await db.rotinas.put(corrida)
+      }
+      await db.ajustes.update('app', { migracoes: [...(aj3.migracoes ?? []), 'corrida-v1'] })
+    }
+    // Dias de perna mais curtos (só se ainda estiverem como no plano original)
+    for (const [id, v1] of [['plano-inf-a', INF_A_V1], ['plano-inf-b', INF_B_V1]] as const) {
+      const r = await db.rotinas.get(id)
+      const novo = rotinasPlano.find((x) => x.id === id)
+      if (r && novo && r.itens.map((i) => i.exId).join('|') === v1.join('|')) {
+        await db.rotinas.put({ ...r, itens: novo.itens, subtitulo: novo.subtitulo })
+      }
     }
   })
 }

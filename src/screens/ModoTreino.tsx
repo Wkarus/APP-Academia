@@ -4,7 +4,8 @@ import { useTreino, e1rm, sugerirAumento, type ItemAtivo } from '../lib/treino'
 import { useExercicios, exPorId, MUSCULO_PT } from '../lib/exercicios'
 import { useAjustes, useAgora, useTelaLigada } from '../lib/hooks'
 import { db } from '../lib/db'
-import { duracao } from '../lib/datas'
+import { duracao, semanaDoPlano } from '../lib/datas'
+import { faseCorrida } from '../content/plano'
 import { vibrar, confeteRecorde } from '../lib/efeitos'
 import type { Exercicio, SerieFeita, Sessao } from '../lib/types'
 import { LEMBRETE_AGUA_MIN, SINAIS_PARAR } from '../content/cuidado'
@@ -81,7 +82,7 @@ export default function ModoTreino() {
   const seriesEx = item ? ativa.series.filter((s) => s.exId === item.exId) : []
   const feitas = ativa.series.filter((s) => s.feita).length
   const total = ativa.series.length
-  const cardio = ativa.tipo === 'cardio' || !!item?.minutos
+  const cardio = !!item?.minutos
 
   const marcar = (s: SerieFeita) => {
     if (!item || !ex) return
@@ -271,6 +272,7 @@ function ExercicioAtual(p: {
   onZoom: () => void
   onTrocar: () => void
 }) {
+  const aj = useAjustes()
   const st = useTreino()
   const { ex, item, series, anteriores, cardio } = p
   return (
@@ -284,7 +286,7 @@ function ExercicioAtual(p: {
             {ex.secundarios.length > 0 && <> · {ex.secundarios.slice(0, 3).map((m) => MUSCULO_PT[m]).join(', ')}</>}
           </p>
           <p className="tnum mt-1 text-sm text-tx2">
-            {cardio ? `Meta: ${item.minutos ?? 25} min moderado` : `Meta: ${item.repMin}-${item.repMax} ${item.unidade === 'seg' ? 'segundos' : 'reps'}${item.nota ? ` ${item.nota}` : ''} · descanso ${Math.floor(item.descansoSeg / 60)}:${String(item.descansoSeg % 60).padStart(2, '0')}`}
+            {cardio && item.nota === 'fase-corrida' ? `${faseCorrida(semanaDoPlano(aj.inicioPlano))} · ritmo de conversa` : cardio ? `Meta: ${item.minutos ?? 25} min moderado` : `Meta: ${item.repMin}-${item.repMax} ${item.unidade === 'seg' ? 'segundos' : 'reps'}${item.nota ? ` ${item.nota}` : ''} · descanso ${Math.floor(item.descansoSeg / 60)}:${String(item.descansoSeg % 60).padStart(2, '0')}`}
           </p>
           <div className="mt-2 flex gap-2">
             <Botao variante="secundario" className="min-h-11 flex-1 px-3 text-sm" icone="livro" onClick={p.onComoFazer}>Como fazer</Botao>
