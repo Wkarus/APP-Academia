@@ -12,6 +12,13 @@ const cardio = (exId: string, minutos = 25): ItemRotina => ({
 export const PRANCHA: ItemRotina = { exId: 'Plank', series: 3, repMin: 30, repMax: 45, descansoSeg: 45, unidade: 'seg' }
 export const PALLOF: ItemRotina = { exId: 'Pallof_Press', series: 3, repMin: 10, repMax: 12, descansoSeg: 45, nota: 'cada lado' }
 
+/** Circuito de core dos dias de cardio (~10 min, descanso curto) */
+export const CIRCUITO_CORE: ItemRotina[] = [
+  { exId: 'Dead_Bug', series: 3, repMin: 8, repMax: 12, descansoSeg: 30, nota: 'cada lado' },
+  { exId: 'Side_Bridge', series: 3, repMin: 20, repMax: 30, descansoSeg: 30, unidade: 'seg', nota: 'cada lado' },
+  { exId: 'Reverse_Crunch', series: 3, repMin: 10, repMax: 15, descansoSeg: 30 },
+]
+
 /** Meu plano — 4 dias de força + 2 de cardio leve, treino às 9h. */
 export const PLANO: Rotina[] = [
   {
@@ -30,8 +37,8 @@ export const PLANO: Rotina[] = [
     ],
   },
   {
-    id: 'plano-cardio', nome: 'Cardio leve', subtitulo: '20-30 min moderado, sem HIIT', dias: [3, 6], tipo: 'cardio', ordem: 3,
-    itens: [cardio('Bicycling_Stationary', 25), cardio('Elliptical_Trainer', 25)],
+    id: 'plano-cardio', nome: 'Cardio leve + core', subtitulo: '20-30 min moderado (escolha um aparelho) + 10 min de abdômen', dias: [3, 6], tipo: 'cardio', ordem: 3,
+    itens: [cardio('Bicycling_Stationary', 25), cardio('Elliptical_Trainer', 25), ...CIRCUITO_CORE],
   },
   {
     id: 'plano-sup-b', nome: 'Superior B', subtitulo: 'Mesmo estilo do A, com peito alto e ombro largo', dias: [4], tipo: 'forca', progressaoPlano: true, ordem: 4,
@@ -55,7 +62,8 @@ export const SUP_B_V1 = ['Incline_Dumbbell_Press', 'Bent_Over_Two-Dumbbell_Row',
 
 /** Séries efetivas no "Meu plano": semanas 1-2 = 2 séries; da semana 3 = 3 séries. */
 export function seriesDaSemana(item: ItemRotina, rotina: Rotina, semana: number) {
-  if (rotina.tipo === 'cardio') return 1
+  if (item.minutos) return 1
+  if (rotina.tipo === 'cardio') return item.series
   if (!rotina.progressaoPlano) return item.series
   return semana <= 2 ? 2 : 3
 }
@@ -79,7 +87,7 @@ export const FOCO_PLANO: Record<string, { foco: string; diferenca: string }> = {
     diferenca: 'Foco na parte de trás da coxa e no equilíbrio de cada perna.',
   },
   'plano-cardio': {
-    foco: 'Coração e recuperação: 20-30 min em ritmo de conversa.',
-    diferenca: 'Leve de propósito — não é para cansar.',
+    foco: 'Coração e recuperação: 20-30 min em ritmo de conversa (bicicleta OU elíptico — escolha um). Depois, circuito de core: dead bug, prancha lateral e abdominal reverso.',
+    diferenca: 'Cardio leve de propósito. O core aqui garante abdômen mesmo se você pular um dia de perna.',
   },
 }

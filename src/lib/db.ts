@@ -1,7 +1,7 @@
 import Dexie, { type EntityTable } from 'dexie'
 import type { Agua, Ajustes, Escolha, Foto, Medida, Refeicao, Rotina, Sessao } from './types'
 import { segundaDaSemana, hojeISO } from './datas'
-import { SUP_B_V1, PRANCHA, PALLOF } from '../content/plano'
+import { SUP_B_V1, PRANCHA, PALLOF, CIRCUITO_CORE } from '../content/plano'
 
 class ForjaDB extends Dexie {
   ajustes!: EntityTable<Ajustes, 'id'>
@@ -68,6 +68,17 @@ export async function garantirDadosIniciais(rotinasPlano: Rotina[]) {
         if (r && !r.itens.some((i) => i.exId === item.exId)) await db.rotinas.put({ ...r, itens: [...r.itens, item] })
       }
       await db.ajustes.update('app', { migracoes: [...(aj.migracoes ?? []), 'core-v1'] })
+    }
+    // Circuito de core nos dias de cardio (uma vez só)
+    const aj2 = await db.ajustes.get('app')
+    if (aj2 && !(aj2.migracoes ?? []).includes('core-cardio-v1')) {
+      const c = await db.rotinas.get('plano-cardio')
+      const novoC = rotinasPlano.find((r) => r.id === 'plano-cardio')
+      if (c && novoC) {
+        const faltam = CIRCUITO_CORE.filter((x) => !c.itens.some((i) => i.exId === x.exId))
+        await db.rotinas.put({ ...c, nome: novoC.nome, subtitulo: novoC.subtitulo, itens: [...c.itens, ...faltam] })
+      }
+      await db.ajustes.update('app', { migracoes: [...(aj2.migracoes ?? []), 'core-cardio-v1'] })
     }
   })
 }

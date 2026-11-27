@@ -81,7 +81,7 @@ export default function ModoTreino() {
   const seriesEx = item ? ativa.series.filter((s) => s.exId === item.exId) : []
   const feitas = ativa.series.filter((s) => s.feita).length
   const total = ativa.series.length
-  const cardio = ativa.tipo === 'cardio' || !!item?.minutos
+  const cardio = !!item?.minutos
 
   const marcar = (s: SerieFeita) => {
     if (!item || !ex) return

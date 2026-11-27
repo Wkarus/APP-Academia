@@ -84,7 +84,7 @@ export default function EditarRotina() {
                   <BotaoIcone icone="lixo" rotulo="Remover" onClick={() => salvar({ ...r, itens: r.itens.filter((_, j) => j !== i) })} className="h-10 w-10 text-warn" />
                 </div>
               </div>
-              {r.tipo === 'cardio' ? (
+              {it.minutos != null ? (
                 <div className="mt-3 flex justify-center"><Num rotulo="minutos" valor={it.minutos ?? 25} passo={5} onChange={(n) => setItem(i, { minutos: n })} /></div>
               ) : (
                 <div className="mt-3 flex flex-wrap justify-between gap-2">

@@ -121,7 +121,7 @@ export const useTreino = create<Estado>()(
           inicio: a.inicio,
           fim: Date.now(),
           series: feitas,
-          cardioMin: a.tipo === 'cardio' ? feitas.reduce((t, x) => t + (x.reps ?? 0), 0) : undefined,
+          cardioMin: a.tipo === 'cardio' ? feitas.filter((x) => a.itens.some((i) => i.exId === x.exId && i.minutos)).reduce((t, x) => t + (x.reps ?? 0), 0) : undefined,
         }
         if (feitas.length) await db.sessoes.put(sessao)
         set({ ativa: null, descanso: null })
