@@ -8,6 +8,10 @@ const cardio = (exId: string, minutos = 25): ItemRotina => ({
   exId, series: 1, repMin: 0, repMax: 0, descansoSeg: 0, minutos,
 })
 
+/** Rack com crossover e barra fixa (v1.7) */
+export const CROSSOVER: ItemRotina = { exId: 'Cable_Crossover', series: 3, repMin: 10, repMax: 15, descansoSeg: 60, nota: 'de cima para baixo' }
+export const BARRA_FIXA: ItemRotina = { exId: 'Pullups', series: 3, repMin: 5, repMax: 10, descansoSeg: 120, nota: '(com elástico ou só a descida, se precisar)' }
+
 /** Core nos dias de superior: prancha (anti-extensão) e Pallof (anti-rotação) */
 export const PRANCHA: ItemRotina = { exId: 'Plank', series: 3, repMin: 30, repMax: 45, descansoSeg: 45, unidade: 'seg' }
 export const PALLOF: ItemRotina = { exId: 'Pallof_Press', series: 3, repMin: 10, repMax: 12, descansoSeg: 45, nota: 'cada lado' }
@@ -37,8 +41,8 @@ export const PLANO: Rotina[] = [
   {
     id: 'plano-sup-a', nome: 'Superior A', subtitulo: 'Peito, costas, ombro e braços', dias: [1], tipo: 'forca', progressaoPlano: true, ordem: 1,
     itens: [
-      f('Dumbbell_Bench_Press'), f('One-Arm_Dumbbell_Row'), braco('Seated_Dumbbell_Press'),
-      f('Wide-Grip_Lat_Pulldown'), braco('EZ-Bar_Curl'), braco('Standing_Dumbbell_Triceps_Extension'),
+      f('Dumbbell_Bench_Press'), CROSSOVER, f('One-Arm_Dumbbell_Row'), braco('Seated_Dumbbell_Press'),
+      BARRA_FIXA, braco('EZ-Bar_Curl'), braco('Standing_Dumbbell_Triceps_Extension'),
       PRANCHA,
     ],
   },
@@ -92,7 +96,7 @@ export function seriesDaSemana(item: ItemRotina, rotina: Rotina, semana: number)
 /** O que cada dia do Meu plano trabalha de diferente (mostrado em Treinos) */
 export const FOCO_PLANO: Record<string, { foco: string; diferenca: string }> = {
   'plano-sup-a': {
-    foco: 'Peito no meio (supino reto), costas em largura (puxada aberta) e espessura (remada unilateral), ombro pela frente (desenvolvimento), bíceps e tríceps.',
+    foco: 'Peito no meio (supino reto) e parte de baixo (crossover de cima para baixo), costas em largura (barra fixa) e espessura (remada unilateral), ombro pela frente (desenvolvimento), bíceps e tríceps.',
     diferenca: 'É o dia mais "pesado" de empurrar e puxar. Fecha com prancha (abdômen segurando a coluna).',
   },
   'plano-sup-b': {

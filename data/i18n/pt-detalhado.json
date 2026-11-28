@@ -1,158 +1,440 @@
 {
   "Dumbbell_Bench_Press": {
     "n": "Supino reto com halteres",
-    "s": ["Deite no banco reto com um halter em cada mão, apoiados nas coxas. Ao deitar, leve os halteres à linha do peito.", "Pés firmes no chão, escápulas encaixadas para trás e para baixo, leve arco natural na lombar.", "Empurre os halteres para cima até quase estender os cotovelos, aproximando-os levemente no topo.", "Desça devagar (2-3 s) até sentir alongar o peito, cotovelos a ~45° do tronco, e repita."],
-    "e": ["Abrir os cotovelos a 90° (sobrecarrega o ombro)", "Bater os halteres no topo e perder a tensão", "Tirar o quadril do banco", "Descer rápido demais, sem controle"],
+    "s": [
+      "Deite no banco reto com um halter em cada mão, apoiados nas coxas. Ao deitar, leve os halteres à linha do peito.",
+      "Pés firmes no chão, escápulas encaixadas para trás e para baixo, leve arco natural na lombar.",
+      "Empurre os halteres para cima até quase estender os cotovelos, aproximando-os levemente no topo.",
+      "Desça devagar (2-3 s) até sentir alongar o peito, cotovelos a ~45° do tronco, e repita."
+    ],
+    "e": [
+      "Abrir os cotovelos a 90° (sobrecarrega o ombro)",
+      "Bater os halteres no topo e perder a tensão",
+      "Tirar o quadril do banco",
+      "Descer rápido demais, sem controle"
+    ],
     "r": "Inspire na descida, solte o ar ao empurrar."
   },
   "One-Arm_Dumbbell_Row": {
     "n": "Remada unilateral com halter",
-    "s": ["Apoie joelho e mão do mesmo lado no banco; a outra perna fica estendida no chão.", "Segure o halter com o braço estendido, costas retas e paralelas ao chão.", "Puxe o halter em direção ao quadril, levando o cotovelo para trás e perto do corpo.", "Aperte as costas no topo por 1 s e desça controlando até estender o braço."],
-    "e": ["Girar o tronco para subir a carga", "Puxar com o bíceps em vez de levar o cotovelo para trás", "Arredondar a lombar", "Encolher o ombro em direção à orelha"],
+    "s": [
+      "Apoie joelho e mão do mesmo lado no banco; a outra perna fica estendida no chão.",
+      "Segure o halter com o braço estendido, costas retas e paralelas ao chão.",
+      "Puxe o halter em direção ao quadril, levando o cotovelo para trás e perto do corpo.",
+      "Aperte as costas no topo por 1 s e desça controlando até estender o braço."
+    ],
+    "e": [
+      "Girar o tronco para subir a carga",
+      "Puxar com o bíceps em vez de levar o cotovelo para trás",
+      "Arredondar a lombar",
+      "Encolher o ombro em direção à orelha"
+    ],
     "r": "Solte o ar ao puxar, inspire ao descer."
   },
   "Seated_Dumbbell_Press": {
     "n": "Desenvolvimento com halteres",
-    "s": ["Sente no banco com encosto quase a 90°, halteres na altura dos ombros, palmas para frente.", "Abdômen firme e costas apoiadas no encosto.", "Empurre os halteres para cima até quase estender os braços, sem travar os cotovelos.", "Desça devagar até a linha do queixo/orelhas e repita."],
-    "e": ["Arquear demais a lombar", "Descer pouco e encurtar o movimento", "Cotovelos muito para trás do corpo", "Usar impulso das pernas"],
+    "s": [
+      "Sente no banco com encosto quase a 90°, halteres na altura dos ombros, palmas para frente.",
+      "Abdômen firme e costas apoiadas no encosto.",
+      "Empurre os halteres para cima até quase estender os braços, sem travar os cotovelos.",
+      "Desça devagar até a linha do queixo/orelhas e repita."
+    ],
+    "e": [
+      "Arquear demais a lombar",
+      "Descer pouco e encurtar o movimento",
+      "Cotovelos muito para trás do corpo",
+      "Usar impulso das pernas"
+    ],
     "r": "Solte o ar ao empurrar, inspire ao descer."
   },
   "Wide-Grip_Lat_Pulldown": {
     "n": "Puxada alta (pulley frente)",
-    "s": ["Sente na estação e prenda as coxas sob o apoio. Segure a barra com pegada pronada, um pouco mais larga que os ombros.", "Incline o tronco levemente para trás e estufe o peito.", "Puxe a barra até a parte de cima do peito, levando os cotovelos para baixo e para trás.", "Segure 1 s e volte devagar até estender os braços, sentindo alongar as costas."],
-    "e": ["Puxar atrás da nuca", "Jogar o tronco para trás para ajudar", "Subir rápido e soltar o peso", "Encolher os ombros"],
+    "s": [
+      "Sente na estação e prenda as coxas sob o apoio. Segure a barra com pegada pronada, um pouco mais larga que os ombros.",
+      "Incline o tronco levemente para trás e estufe o peito.",
+      "Puxe a barra até a parte de cima do peito, levando os cotovelos para baixo e para trás.",
+      "Segure 1 s e volte devagar até estender os braços, sentindo alongar as costas."
+    ],
+    "e": [
+      "Puxar atrás da nuca",
+      "Jogar o tronco para trás para ajudar",
+      "Subir rápido e soltar o peso",
+      "Encolher os ombros"
+    ],
     "r": "Solte o ar ao puxar, inspire ao subir a barra."
   },
   "EZ-Bar_Curl": {
     "n": "Rosca direta com barra W",
-    "s": ["Em pé, segure a barra W nas partes angulares internas, braços estendidos à frente das coxas.", "Cotovelos colados ao corpo e ombros parados.", "Flexione os cotovelos e suba a barra até a altura do peito.", "Aperte o bíceps no topo e desça em 2-3 s até estender quase totalmente."],
-    "e": ["Balançar o tronco (roubar)", "Levar os cotovelos para frente", "Não estender os braços na descida", "Dobrar os punhos"],
+    "s": [
+      "Em pé, segure a barra W nas partes angulares internas, braços estendidos à frente das coxas.",
+      "Cotovelos colados ao corpo e ombros parados.",
+      "Flexione os cotovelos e suba a barra até a altura do peito.",
+      "Aperte o bíceps no topo e desça em 2-3 s até estender quase totalmente."
+    ],
+    "e": [
+      "Balançar o tronco (roubar)",
+      "Levar os cotovelos para frente",
+      "Não estender os braços na descida",
+      "Dobrar os punhos"
+    ],
     "r": "Solte o ar ao subir, inspire ao descer."
   },
   "Standing_Dumbbell_Triceps_Extension": {
     "n": "Extensão de tríceps com halter (francês)",
-    "s": ["Em pé ou sentado, segure um halter com as duas mãos acima da cabeça, braços estendidos.", "Mantenha os braços perto da cabeça e os cotovelos apontando para frente.", "Desça o halter atrás da cabeça dobrando só os cotovelos.", "Estenda os cotovelos de volta ao topo, contraindo o tríceps."],
-    "e": ["Abrir os cotovelos para os lados", "Arquear a lombar", "Mexer os ombros em vez de só o cotovelo", "Carga pesada demais para controlar atrás da cabeça"],
+    "s": [
+      "Em pé ou sentado, segure um halter com as duas mãos acima da cabeça, braços estendidos.",
+      "Mantenha os braços perto da cabeça e os cotovelos apontando para frente.",
+      "Desça o halter atrás da cabeça dobrando só os cotovelos.",
+      "Estenda os cotovelos de volta ao topo, contraindo o tríceps."
+    ],
+    "e": [
+      "Abrir os cotovelos para os lados",
+      "Arquear a lombar",
+      "Mexer os ombros em vez de só o cotovelo",
+      "Carga pesada demais para controlar atrás da cabeça"
+    ],
     "r": "Inspire ao descer, solte o ar ao estender."
   },
   "Goblet_Squat": {
     "n": "Agachamento goblet",
-    "s": ["Segure um halter na vertical junto ao peito, com as duas mãos sob a cabeça do halter.", "Pés na largura dos ombros, pontas levemente para fora.", "Desça sentando entre os calcanhares, peito aberto e coluna neutra, até as coxas passarem da paralela se a mobilidade permitir.", "Empurre o chão com o pé inteiro e suba estendendo joelhos e quadril."],
-    "e": ["Joelhos caindo para dentro", "Tirar os calcanhares do chão", "Arredondar a lombar no fundo", "Afastar o halter do peito"],
+    "s": [
+      "Segure um halter na vertical junto ao peito, com as duas mãos sob a cabeça do halter.",
+      "Pés na largura dos ombros, pontas levemente para fora.",
+      "Desça sentando entre os calcanhares, peito aberto e coluna neutra, até as coxas passarem da paralela se a mobilidade permitir.",
+      "Empurre o chão com o pé inteiro e suba estendendo joelhos e quadril."
+    ],
+    "e": [
+      "Joelhos caindo para dentro",
+      "Tirar os calcanhares do chão",
+      "Arredondar a lombar no fundo",
+      "Afastar o halter do peito"
+    ],
     "r": "Inspire e trave o abdômen antes de descer, solte o ar ao subir."
   },
   "Stiff-Legged_Dumbbell_Deadlift": {
     "n": "Stiff com halteres",
-    "s": ["Em pé, halteres à frente das coxas, joelhos levemente flexionados (e assim permanecem).", "Leve o quadril para trás, deslizando os halteres rente às pernas.", "Desça até sentir alongar bem os posteriores, mantendo a coluna reta (geralmente até meio da canela).", "Volte empurrando o quadril para frente e contraia os glúteos no topo."],
-    "e": ["Arredondar as costas", "Afastar os halteres das pernas", "Transformar em agachamento dobrando muito os joelhos", "Hiperestender a lombar no topo"],
+    "s": [
+      "Em pé, halteres à frente das coxas, joelhos levemente flexionados (e assim permanecem).",
+      "Leve o quadril para trás, deslizando os halteres rente às pernas.",
+      "Desça até sentir alongar bem os posteriores, mantendo a coluna reta (geralmente até meio da canela).",
+      "Volte empurrando o quadril para frente e contraia os glúteos no topo."
+    ],
+    "e": [
+      "Arredondar as costas",
+      "Afastar os halteres das pernas",
+      "Transformar em agachamento dobrando muito os joelhos",
+      "Hiperestender a lombar no topo"
+    ],
     "r": "Inspire na descida, solte o ar ao subir."
   },
   "Dumbbell_Lunges": {
     "n": "Afundo com halteres",
-    "s": ["Em pé, um halter em cada mão ao lado do corpo.", "Dê um passo à frente e desça até os dois joelhos ficarem perto de 90°.", "O joelho de trás quase toca o chão; tronco reto.", "Empurre com o calcanhar da frente para voltar e alterne as pernas."],
-    "e": ["Passo curto demais (joelho passa muito da ponta do pé)", "Joelho da frente caindo para dentro", "Inclinar o tronco à frente", "Bater o joelho de trás no chão"],
+    "s": [
+      "Em pé, um halter em cada mão ao lado do corpo.",
+      "Dê um passo à frente e desça até os dois joelhos ficarem perto de 90°.",
+      "O joelho de trás quase toca o chão; tronco reto.",
+      "Empurre com o calcanhar da frente para voltar e alterne as pernas."
+    ],
+    "e": [
+      "Passo curto demais (joelho passa muito da ponta do pé)",
+      "Joelho da frente caindo para dentro",
+      "Inclinar o tronco à frente",
+      "Bater o joelho de trás no chão"
+    ],
     "r": "Inspire ao descer, solte o ar ao subir."
   },
   "Butt_Lift_Bridge": {
     "n": "Ponte de glúteo",
-    "s": ["Deite de barriga para cima, joelhos dobrados e pés no chão na largura dos ombros.", "Opcional: apoie um halter sobre o quadril.", "Empurre com os calcanhares e suba o quadril até alinhar joelhos, quadril e ombros.", "Contraia os glúteos 1-2 s no topo e desça devagar."],
-    "e": ["Subir arqueando a lombar em vez de usar o glúteo", "Pés longe demais (puxa posterior)", "Joelhos abrindo ou fechando", "Descer sem controle"],
+    "s": [
+      "Deite de barriga para cima, joelhos dobrados e pés no chão na largura dos ombros.",
+      "Opcional: apoie um halter sobre o quadril.",
+      "Empurre com os calcanhares e suba o quadril até alinhar joelhos, quadril e ombros.",
+      "Contraia os glúteos 1-2 s no topo e desça devagar."
+    ],
+    "e": [
+      "Subir arqueando a lombar em vez de usar o glúteo",
+      "Pés longe demais (puxa posterior)",
+      "Joelhos abrindo ou fechando",
+      "Descer sem controle"
+    ],
     "r": "Solte o ar ao subir, inspire ao descer."
   },
   "Standing_Dumbbell_Calf_Raise": {
     "n": "Panturrilha em pé com halter",
-    "s": ["Em pé, segure um halter em cada mão (ou um só, apoiando-se no espaldar com a outra mão).", "Apoie a ponta dos pés em uma anilha ou degrau, calcanhares para fora.", "Suba na ponta dos pés o máximo possível e segure 1 s.", "Desça devagar até alongar bem a panturrilha."],
-    "e": ["Movimento curto e rápido (quicar)", "Dobrar os joelhos para ajudar", "Não alongar embaixo"],
+    "s": [
+      "Em pé, segure um halter em cada mão (ou um só, apoiando-se no espaldar com a outra mão).",
+      "Apoie a ponta dos pés em uma anilha ou degrau, calcanhares para fora.",
+      "Suba na ponta dos pés o máximo possível e segure 1 s.",
+      "Desça devagar até alongar bem a panturrilha."
+    ],
+    "e": [
+      "Movimento curto e rápido (quicar)",
+      "Dobrar os joelhos para ajudar",
+      "Não alongar embaixo"
+    ],
     "r": "Solte o ar ao subir, inspire ao descer."
   },
   "Crunches": {
     "n": "Abdominal crunch",
-    "s": ["Deite de costas, joelhos dobrados e pés no chão.", "Mãos ao lado da cabeça, sem entrelaçar os dedos nem puxar o pescoço.", "Encurte a distância entre costelas e quadril, tirando as escápulas do chão.", "Segure 1 s em cima e desça devagar."],
-    "e": ["Puxar a cabeça com as mãos", "Subir com impulso", "Tirar a lombar do chão (vira sit-up)"],
+    "s": [
+      "Deite de costas, joelhos dobrados e pés no chão.",
+      "Mãos ao lado da cabeça, sem entrelaçar os dedos nem puxar o pescoço.",
+      "Encurte a distância entre costelas e quadril, tirando as escápulas do chão.",
+      "Segure 1 s em cima e desça devagar."
+    ],
+    "e": [
+      "Puxar a cabeça com as mãos",
+      "Subir com impulso",
+      "Tirar a lombar do chão (vira sit-up)"
+    ],
     "r": "Solte todo o ar ao subir, inspire ao descer."
   },
   "Incline_Dumbbell_Press": {
     "n": "Supino inclinado com halteres",
-    "s": ["Ajuste o banco a 30-45°. Sente e leve os halteres à linha do peito alto.", "Escápulas encaixadas, pés firmes.", "Empurre os halteres para cima e levemente para dentro.", "Desça devagar até alongar o peitoral, cotovelos a ~45°."],
-    "e": ["Banco inclinado demais (vira ombro)", "Abrir os cotovelos a 90°", "Tirar o quadril do banco", "Amplitude curta"],
+    "s": [
+      "Ajuste o banco a 30-45°. Sente e leve os halteres à linha do peito alto.",
+      "Escápulas encaixadas, pés firmes.",
+      "Empurre os halteres para cima e levemente para dentro.",
+      "Desça devagar até alongar o peitoral, cotovelos a ~45°."
+    ],
+    "e": [
+      "Banco inclinado demais (vira ombro)",
+      "Abrir os cotovelos a 90°",
+      "Tirar o quadril do banco",
+      "Amplitude curta"
+    ],
     "r": "Inspire na descida, solte o ar ao empurrar."
   },
   "Bent_Over_Two-Dumbbell_Row": {
     "n": "Remada curvada com halteres",
-    "s": ["Em pé, halteres nas mãos, incline o tronco à frente (~45°) com joelhos levemente dobrados.", "Coluna neutra e braços estendidos.", "Puxe os halteres em direção ao quadril, cotovelos perto do corpo.", "Aperte as escápulas e desça controlando."],
-    "e": ["Arredondar a lombar", "Levantar o tronco a cada repetição", "Puxar com impulso", "Encolher os ombros"],
+    "s": [
+      "Em pé, halteres nas mãos, incline o tronco à frente (~45°) com joelhos levemente dobrados.",
+      "Coluna neutra e braços estendidos.",
+      "Puxe os halteres em direção ao quadril, cotovelos perto do corpo.",
+      "Aperte as escápulas e desça controlando."
+    ],
+    "e": [
+      "Arredondar a lombar",
+      "Levantar o tronco a cada repetição",
+      "Puxar com impulso",
+      "Encolher os ombros"
+    ],
     "r": "Solte o ar ao puxar, inspire ao descer."
   },
   "Side_Lateral_Raise": {
     "n": "Elevação lateral com halteres",
-    "s": ["Em pé, halteres ao lado do corpo, cotovelos levemente dobrados.", "Incline o tronco um pouco à frente.", "Eleve os braços para os lados até a altura dos ombros, liderando com os cotovelos.", "Desça devagar (2-3 s)."],
-    "e": ["Subir acima da linha dos ombros com trapézio", "Balançar o corpo", "Carga pesada demais", "Girar os polegares para cima"],
+    "s": [
+      "Em pé, halteres ao lado do corpo, cotovelos levemente dobrados.",
+      "Incline o tronco um pouco à frente.",
+      "Eleve os braços para os lados até a altura dos ombros, liderando com os cotovelos.",
+      "Desça devagar (2-3 s)."
+    ],
+    "e": [
+      "Subir acima da linha dos ombros com trapézio",
+      "Balançar o corpo",
+      "Carga pesada demais",
+      "Girar os polegares para cima"
+    ],
     "r": "Solte o ar ao subir, inspire ao descer."
   },
   "Close-Grip_Front_Lat_Pulldown": {
     "n": "Puxada pegada fechada",
-    "s": ["Sente na estação de puxada e segure a barra (ou triângulo) com pegada fechada.", "Peito alto e leve inclinação do tronco para trás.", "Puxe até a parte alta do peito levando os cotovelos para baixo, junto ao corpo.", "Volte devagar até estender os braços."],
-    "e": ["Puxar com o tronco balançando", "Não estender os braços em cima", "Encolher os ombros"],
+    "s": [
+      "Sente na estação de puxada e segure a barra (ou triângulo) com pegada fechada.",
+      "Peito alto e leve inclinação do tronco para trás.",
+      "Puxe até a parte alta do peito levando os cotovelos para baixo, junto ao corpo.",
+      "Volte devagar até estender os braços."
+    ],
+    "e": [
+      "Puxar com o tronco balançando",
+      "Não estender os braços em cima",
+      "Encolher os ombros"
+    ],
     "r": "Solte o ar ao puxar, inspire ao voltar."
   },
   "Hammer_Curls": {
     "n": "Rosca martelo",
-    "s": ["Em pé, halteres ao lado do corpo com as palmas voltadas uma para a outra.", "Cotovelos fixos junto ao tronco.", "Suba os halteres sem girar os punhos até a altura do ombro.", "Desça devagar até estender."],
-    "e": ["Balançar o corpo", "Cotovelos indo para frente", "Descer rápido demais"],
+    "s": [
+      "Em pé, halteres ao lado do corpo com as palmas voltadas uma para a outra.",
+      "Cotovelos fixos junto ao tronco.",
+      "Suba os halteres sem girar os punhos até a altura do ombro.",
+      "Desça devagar até estender."
+    ],
+    "e": [
+      "Balançar o corpo",
+      "Cotovelos indo para frente",
+      "Descer rápido demais"
+    ],
     "r": "Solte o ar ao subir, inspire ao descer."
   },
   "Triceps_Pushdown": {
     "n": "Tríceps na polia (pushdown)",
-    "s": ["De frente para a polia alta, segure a barra com pegada pronada na altura do peito.", "Cotovelos colados ao corpo, tronco levemente inclinado.", "Empurre a barra para baixo até estender totalmente os cotovelos.", "Volte devagar até os antebraços ficarem um pouco acima da paralela."],
-    "e": ["Cotovelos saindo do lugar", "Usar o peso do corpo para empurrar", "Subir a barra até o rosto"],
+    "s": [
+      "De frente para a polia alta, segure a barra com pegada pronada na altura do peito.",
+      "Cotovelos colados ao corpo, tronco levemente inclinado.",
+      "Empurre a barra para baixo até estender totalmente os cotovelos.",
+      "Volte devagar até os antebraços ficarem um pouco acima da paralela."
+    ],
+    "e": [
+      "Cotovelos saindo do lugar",
+      "Usar o peso do corpo para empurrar",
+      "Subir a barra até o rosto"
+    ],
     "r": "Solte o ar ao empurrar, inspire ao voltar."
   },
   "Romanian_Deadlift": {
     "n": "Levantamento terra romeno",
-    "s": ["Segure a barra olímpica na largura dos ombros, em pé, joelhos levemente dobrados.", "Leve o quadril para trás deslizando a barra rente às coxas.", "Desça até logo abaixo dos joelhos ou até onde a coluna fica neutra.", "Suba empurrando o quadril para frente e contraia os glúteos."],
-    "e": ["Arredondar as costas", "Barra longe do corpo", "Dobrar demais os joelhos", "Olhar para cima e forçar o pescoço"],
+    "s": [
+      "Segure a barra olímpica na largura dos ombros, em pé, joelhos levemente dobrados.",
+      "Leve o quadril para trás deslizando a barra rente às coxas.",
+      "Desça até logo abaixo dos joelhos ou até onde a coluna fica neutra.",
+      "Suba empurrando o quadril para frente e contraia os glúteos."
+    ],
+    "e": [
+      "Arredondar as costas",
+      "Barra longe do corpo",
+      "Dobrar demais os joelhos",
+      "Olhar para cima e forçar o pescoço"
+    ],
     "r": "Inspire e trave o abdômen antes de descer, solte o ar ao subir."
   },
   "Split_Squat_with_Dumbbells": {
     "n": "Agachamento búlgaro com halteres",
-    "s": ["De costas para o banco, apoie o peito do pé de trás sobre ele. Halteres nas mãos.", "Pé da frente a uma distância que permita descer com o joelho alinhado ao pé.", "Desça flexionando joelho e quadril da perna da frente até a coxa ficar perto da paralela.", "Empurre com o calcanhar da frente para subir. Termine um lado e troque."],
-    "e": ["Pé da frente perto demais do banco", "Joelho da frente caindo para dentro", "Empurrar com a perna de trás", "Perder o equilíbrio por pressa"],
+    "s": [
+      "De costas para o banco, apoie o peito do pé de trás sobre ele. Halteres nas mãos.",
+      "Pé da frente a uma distância que permita descer com o joelho alinhado ao pé.",
+      "Desça flexionando joelho e quadril da perna da frente até a coxa ficar perto da paralela.",
+      "Empurre com o calcanhar da frente para subir. Termine um lado e troque."
+    ],
+    "e": [
+      "Pé da frente perto demais do banco",
+      "Joelho da frente caindo para dentro",
+      "Empurrar com a perna de trás",
+      "Perder o equilíbrio por pressa"
+    ],
     "r": "Inspire ao descer, solte o ar ao subir."
   },
   "Dumbbell_Step_Ups": {
     "n": "Step-up com halteres",
-    "s": ["Em frente ao banco (ou step firme), halteres nas mãos.", "Apoie o pé inteiro de uma perna em cima do banco.", "Suba empurrando com o calcanhar da perna de cima, sem impulsionar com a de baixo.", "Desça devagar e repita; alterne as pernas."],
-    "e": ["Impulsionar com a perna de baixo", "Banco alto demais", "Joelho caindo para dentro"],
+    "s": [
+      "Em frente ao banco (ou step firme), halteres nas mãos.",
+      "Apoie o pé inteiro de uma perna em cima do banco.",
+      "Suba empurrando com o calcanhar da perna de cima, sem impulsionar com a de baixo.",
+      "Desça devagar e repita; alterne as pernas."
+    ],
+    "e": [
+      "Impulsionar com a perna de baixo",
+      "Banco alto demais",
+      "Joelho caindo para dentro"
+    ],
     "r": "Solte o ar ao subir, inspire ao descer."
   },
   "Dumbbell_Seated_One-Leg_Calf_Raise": {
     "n": "Panturrilha sentada com halter",
-    "s": ["Sente na ponta do banco com a ponta do pé sobre uma anilha ou degrau.", "Apoie um halter sobre a coxa, perto do joelho.", "Suba o calcanhar o máximo possível e segure 1 s.", "Desça devagar alongando bem. Troque de perna."],
-    "e": ["Amplitude curta", "Quicar no fundo", "Carga leve demais (o sóleo aguenta bastante)"],
+    "s": [
+      "Sente na ponta do banco com a ponta do pé sobre uma anilha ou degrau.",
+      "Apoie um halter sobre a coxa, perto do joelho.",
+      "Suba o calcanhar o máximo possível e segure 1 s.",
+      "Desça devagar alongando bem. Troque de perna."
+    ],
+    "e": [
+      "Amplitude curta",
+      "Quicar no fundo",
+      "Carga leve demais (o sóleo aguenta bastante)"
+    ],
     "r": "Solte o ar ao subir, inspire ao descer."
   },
   "Flat_Bench_Lying_Leg_Raise": {
     "n": "Elevação de pernas no banco",
-    "s": ["Deite no banco reto com as pernas para fora da ponta e segure as laterais do banco.", "Pernas estendidas com joelhos levemente soltos.", "Eleve as pernas até ficarem perpendiculares ao chão.", "Desça devagar sem deixar a lombar descolar do banco."],
-    "e": ["Arquear a lombar", "Descer com velocidade", "Usar impulso"],
+    "s": [
+      "Deite no banco reto com as pernas para fora da ponta e segure as laterais do banco.",
+      "Pernas estendidas com joelhos levemente soltos.",
+      "Eleve as pernas até ficarem perpendiculares ao chão.",
+      "Desça devagar sem deixar a lombar descolar do banco."
+    ],
+    "e": [
+      "Arquear a lombar",
+      "Descer com velocidade",
+      "Usar impulso"
+    ],
     "r": "Solte o ar ao subir as pernas, inspire ao descer."
   },
   "Bicycling_Stationary": {
     "n": "Bicicleta ergométrica",
-    "s": ["Ajuste o banco: com o pedal embaixo, o joelho fica levemente dobrado.", "Comece 3-5 min leve para aquecer.", "Mantenha intensidade moderada: dá para falar frases curtas (esforço 5-6 de 10).", "Termine com 3 min leves para desacelerar."],
-    "e": ["Banco baixo demais (sobrecarrega o joelho)", "Intensidade alta demais para um dia de cardio leve", "Esquecer de beber água"],
+    "s": [
+      "Ajuste o banco: com o pedal embaixo, o joelho fica levemente dobrado.",
+      "Comece 3-5 min leve para aquecer.",
+      "Mantenha intensidade moderada: dá para falar frases curtas (esforço 5-6 de 10).",
+      "Termine com 3 min leves para desacelerar."
+    ],
+    "e": [
+      "Banco baixo demais (sobrecarrega o joelho)",
+      "Intensidade alta demais para um dia de cardio leve",
+      "Esquecer de beber água"
+    ],
     "r": "Respiração ritmada pelo nariz e boca; se ficar ofegante, reduza."
   },
   "Elliptical_Trainer": {
     "n": "Elíptico (transport)",
-    "s": ["Suba no aparelho segurando as alças.", "Postura ereta, olhar à frente, pés inteiros nos pedais.", "Mantenha ritmo constante e intensidade moderada (dá para conversar).", "Use os braços para distribuir o esforço."],
-    "e": ["Apoiar o peso do corpo nas alças", "Ficar na ponta dos pés", "Inclinar o tronco à frente"],
+    "s": [
+      "Suba no aparelho segurando as alças.",
+      "Postura ereta, olhar à frente, pés inteiros nos pedais.",
+      "Mantenha ritmo constante e intensidade moderada (dá para conversar).",
+      "Use os braços para distribuir o esforço."
+    ],
+    "e": [
+      "Apoiar o peso do corpo nas alças",
+      "Ficar na ponta dos pés",
+      "Inclinar o tronco à frente"
+    ],
     "r": "Respiração ritmada e confortável."
   },
   "Walking_Treadmill": {
     "n": "Caminhada na esteira",
-    "s": ["Comece em velocidade baixa para aquecer.", "Passadas naturais, tronco ereto e braços soltos.", "Ajuste velocidade/inclinação para esforço moderado.", "Desacelere nos últimos 3 minutos."],
-    "e": ["Segurar nas laterais o tempo todo", "Passada longa demais", "Inclinação alta sem adaptação"],
+    "s": [
+      "Comece em velocidade baixa para aquecer.",
+      "Passadas naturais, tronco ereto e braços soltos.",
+      "Ajuste velocidade/inclinação para esforço moderado.",
+      "Desacelere nos últimos 3 minutos."
+    ],
+    "e": [
+      "Segurar nas laterais o tempo todo",
+      "Passada longa demais",
+      "Inclinação alta sem adaptação"
+    ],
     "r": "Respiração confortável; deve ser possível conversar."
+  },
+  "Cable_Crossover": {
+    "n": "Crossover na polia (de cima para baixo)",
+    "s": [
+      "Coloque as duas polias no alto e segure um puxador em cada mão. Dê um passo à frente, um pé na frente do outro.",
+      "Incline o tronco levemente à frente, peito aberto e cotovelos um pouco dobrados (fixos assim).",
+      "Puxe as mãos em arco para baixo e para dentro, até se encontrarem na altura do umbigo/quadril.",
+      "Aperte o peito 1 s embaixo e volte abrindo devagar até sentir alongar o peito."
+    ],
+    "e": [
+      "Dobrar e esticar os cotovelos (vira tríceps)",
+      "Carga pesada demais, puxando com o corpo",
+      "Ombros subindo para a orelha",
+      "Encurtar o movimento na volta"
+    ],
+    "r": "Solte o ar ao fechar os braços, inspire ao abrir."
+  },
+  "Pullups": {
+    "n": "Barra fixa (pull-up)",
+    "s": [
+      "Segure a barra com as palmas para frente, um pouco mais abertas que os ombros, braços estendidos.",
+      "Puxe os ombros para baixo e para trás antes de subir.",
+      "Suba levando o peito em direção à barra até o queixo passar dela.",
+      "Desça devagar (2-3 s) até estender os braços.",
+      "Ainda não sobe? Use um elástico preso na barra sob o joelho/pé, ou faça só a descida: suba com ajuda de um banco e desça em 3-5 s."
+    ],
+    "e": [
+      "Balançar o corpo ou chutar as pernas",
+      "Subir só até a metade",
+      "Despencar na descida",
+      "Encolher os ombros"
+    ],
+    "r": "Solte o ar ao subir, inspire ao descer."
   }
 }

@@ -1,7 +1,7 @@
 import Dexie, { type EntityTable } from 'dexie'
 import type { Agua, Ajustes, Escolha, Foto, Medida, Refeicao, Rotina, Sessao } from './types'
 import { segundaDaSemana, hojeISO } from './datas'
-import { SUP_B_V1, INF_A_V1, INF_B_V1, PRANCHA, PALLOF, CIRCUITO_CORE } from '../content/plano'
+import { SUP_B_V1, INF_A_V1, INF_B_V1, PRANCHA, PALLOF, CIRCUITO_CORE, CROSSOVER, BARRA_FIXA } from '../content/plano'
 
 class ForjaDB extends Dexie {
   ajustes!: EntityTable<Ajustes, 'id'>
@@ -79,6 +79,21 @@ export async function garantirDadosIniciais(rotinasPlano: Rotina[]) {
         await db.rotinas.put({ ...c, nome: novoC.nome, subtitulo: novoC.subtitulo, itens: [...c.itens, ...faltam] })
       }
       await db.ajustes.update('app', { migracoes: [...(aj2.migracoes ?? []), 'core-cardio-v1'] })
+    }
+    // Rack: barra fixa no lugar da puxada aberta e crossover depois do supino reto (Superior A, uma vez só)
+    const aj4 = await db.ajustes.get('app')
+    if (aj4 && !(aj4.migracoes ?? []).includes('rack-v1')) {
+      const a = await db.rotinas.get('plano-sup-a')
+      if (a) {
+        let itens = a.itens.map((i) => (i.exId === 'Wide-Grip_Lat_Pulldown' ? { ...BARRA_FIXA, series: i.series } : i))
+        if (!itens.some((i) => i.exId === BARRA_FIXA.exId)) itens.push(BARRA_FIXA)
+        if (!itens.some((i) => i.exId === CROSSOVER.exId)) {
+          const pos = itens.findIndex((i) => i.exId === 'Dumbbell_Bench_Press')
+          itens.splice(pos >= 0 ? pos + 1 : 0, 0, CROSSOVER)
+        }
+        await db.rotinas.put({ ...a, itens })
+      }
+      await db.ajustes.update('app', { migracoes: [...(aj4.migracoes ?? []), 'rack-v1'] })
     }
     // Corrida no sábado: o cardio leve fica só na quarta (uma vez só)
     const aj3 = await db.ajustes.get('app')
