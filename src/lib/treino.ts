@@ -113,6 +113,7 @@ export const useTreino = create<Estado>()(
       finalizar: async () => {
         const a = get().ativa
         if (!a) return null
+        clearTimeout(timerRascunho)
         const feitas = a.series.filter((x) => x.feita)
         const sessao: Sessao = {
           id: a.id,
@@ -124,14 +125,53 @@ export const useTreino = create<Estado>()(
           cardioMin: a.tipo === 'cardio' ? feitas.filter((x) => a.itens.some((i) => i.exId === x.exId && i.minutos)).reduce((t, x) => t + (x.reps ?? 0), 0) : undefined,
         }
         if (feitas.length) await db.sessoes.put(sessao)
+        else await db.sessoes.delete(a.id)
+        const seriesSalvas = await guardarSeriesNaRotina(a)
         set({ ativa: null, descanso: null })
-        return feitas.length ? sessao : null
+        return feitas.length ? { ...sessao, seriesSalvas } : null
       },
-      descartar: () => set({ ativa: null, descanso: null }),
+      descartar: () => {
+        const a = get().ativa
+        clearTimeout(timerRascunho)
+        if (a) db.sessoes.delete(a.id).catch(() => {})
+        set({ ativa: null, descanso: null })
+      },
     }),
     { name: 'forja-treino-ativo' },
   ),
 )
+
+// ---------- Salvar enquanto treina ----------
+// Cada série marcada já vai para o banco (sem "fim"), para nada se perder se o app fechar
+// ou se a pessoa esquecer de tocar em Finalizar.
+let timerRascunho: ReturnType<typeof setTimeout> | undefined
+useTreino.subscribe((s, prev) => {
+  if (!s.ativa || s.ativa === prev.ativa) return
+  const a = s.ativa
+  clearTimeout(timerRascunho)
+  timerRascunho = setTimeout(async () => {
+    const feitas = a.series.filter((x) => x.feita)
+    if (!feitas.length) return
+    await db.sessoes.put({ id: a.id, rotinaId: a.rotinaId, nome: a.nome, inicio: a.inicio, series: feitas })
+  }, 400)
+})
+
+/** Se a pessoa mudou o número de séries (+ Série / − Série), guarda isso na rotina para a próxima vez */
+async function guardarSeriesNaRotina(a: SessaoAtiva) {
+  if (!a.rotinaId) return false
+  const r = await db.rotinas.get(a.rotinaId)
+  if (!r) return false
+  const contagem = (exId: string) => a.series.filter((x) => x.exId === exId).length
+  const mudou = a.itens.some((i) => !i.minutos && contagem(i.exId) > 0 && contagem(i.exId) !== i.seriesAlvo)
+  if (!mudou) return false
+  const itens = r.itens.map((i) => {
+    const doTreino = a.itens.find((x) => x.exId === i.exId)
+    if (!doTreino || i.minutos) return i
+    return { ...i, series: contagem(i.exId) || doTreino.seriesAlvo }
+  })
+  await db.rotinas.put({ ...r, itens, progressaoPlano: false })
+  return true
+}
 
 // ---------- Histórico e recordes ----------
 export const e1rm = (kg: number, reps: number) => (reps <= 1 ? kg : kg * (1 + reps / 30))

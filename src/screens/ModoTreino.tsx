@@ -59,6 +59,21 @@ export default function ModoTreino() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ids])
 
+  // Preenche carga e repetições com os valores do último treino (editáveis)
+  useEffect(() => {
+    if (!ativa) return
+    for (const it of ativa.itens) {
+      const ant = anteriores[it.exId]
+      if (!ant?.length) continue
+      for (const s of ativa.series) {
+        if (s.exId !== it.exId || s.feita || s.kg != null || s.reps != null) continue
+        const a = ant[s.idx] ?? ant[ant.length - 1]
+        st.atualizarSerie(s.exId, s.idx, { kg: a.kg, reps: a.reps })
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [anteriores])
+
   // Lembrete de hidratação no modo cuidado
   const precisaAgua = !!ativa && aj.modoCuidado && agora - ativa.ultimaAgua > LEMBRETE_AGUA_MIN * 60000
   useEffect(() => {
@@ -323,16 +338,11 @@ function ExercicioAtual(p: {
               {cardio || item.unidade === 'seg' ? (
                 <span className="text-center text-tx2">—</span>
               ) : (
-                <input
-                  inputMode="decimal"
-                  aria-label={`Carga da série ${s.idx + 1} em kg`}
+                <CampoKg
+                  rotulo={`Carga da série ${s.idx + 1} em kg`}
                   placeholder={ant?.kg != null ? fmt(ant.kg) : 'kg'}
-                  value={fmt(s.kg)}
-                  onChange={(e) => {
-                    const v = e.target.value.replace(',', '.')
-                    st.atualizarSerie(s.exId, s.idx, { kg: v === '' ? null : Number(v) || 0 })
-                  }}
-                  className="tnum h-12 w-full rounded-xl bg-s2 text-center text-lg font-semibold text-tx placeholder:text-tx2/60"
+                  valor={s.kg}
+                  onMudar={(kg) => st.atualizarSerie(s.exId, s.idx, { kg })}
                 />
               )}
               <input
@@ -361,8 +371,35 @@ function ExercicioAtual(p: {
           </div>
         )}
       </div>
-      <p className="mt-2 px-1 text-xs text-tx2">Toque em ✓ com o campo vazio para repetir a carga anterior. Toque na animação para ampliar.</p>
+      <p className="mt-2 px-1 text-xs text-tx2">Carga e repetições do último treino já vêm preenchidas — ajuste se mudou e toque em ✓. Cada série marcada é salva na hora.</p>
     </section>
+  )
+}
+
+/** Campo de carga que aceita vírgula (ex.: 22,5) sem perder o que está sendo digitado */
+function CampoKg({ rotulo, placeholder, valor, onMudar }: { rotulo: string; placeholder: string; valor: number | null; onMudar: (kg: number | null) => void }) {
+  const [texto, setTexto] = useState(fmt(valor))
+  const [focado, setFocado] = useState(false)
+  useEffect(() => {
+    if (!focado) setTexto(fmt(valor))
+  }, [valor, focado])
+  return (
+    <input
+      inputMode="decimal"
+      aria-label={rotulo}
+      placeholder={placeholder}
+      value={texto}
+      onFocus={() => setFocado(true)}
+      onBlur={() => setFocado(false)}
+      onChange={(e) => {
+        const t = e.target.value.replace(/[^0-9.,]/g, '')
+        setTexto(t)
+        const v = t.replace(',', '.')
+        if (v === '') onMudar(null)
+        else if (!Number.isNaN(Number(v))) onMudar(Number(v))
+      }}
+      className="tnum h-12 w-full rounded-xl bg-s2 text-center text-lg font-semibold text-tx placeholder:text-tx2/60"
+    />
   )
 }
 
@@ -384,6 +421,7 @@ function Resumo({ sessao, onFechar }: { sessao: Sessao; onFechar: () => void }) 
           {recordes.map((r, i) => <li key={i} className="rounded-xl bg-amber/10 p-2">★ {exPorId(r.exId)?.nome}: {fmt(r.kg)} kg × {r.reps}</li>)}
         </ul>
       )}
+      {sessao.seriesSalvas && <p className="rounded-xl bg-ok/10 p-3 text-center text-sm">Número de séries salvo na rotina — da próxima vez já vem assim.</p>}
       <Botao grande onClick={() => { onFechar(); setTimeout(() => (location.hash = '#/dieta?agora=1'), 0) }} icone="prato">O que comer agora</Botao>
       <Botao grande variante="secundario" onClick={onFechar}>Voltar para Hoje</Botao>
     </div>
