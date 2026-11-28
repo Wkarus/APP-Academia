@@ -84,6 +84,8 @@ export interface Sessao {
   series: SerieFeita[]
   cardioMin?: number
   nota?: string
+  /** só no resumo: o número de séries foi salvo na rotina */
+  seriesSalvas?: boolean
 }
 
 export interface Medida { id?: number; data: string; peso?: number; cintura?: number }
